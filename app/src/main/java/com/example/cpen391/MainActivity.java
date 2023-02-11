@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 // on below line we are getting data from our edit text.
                 String userName = usernameTV.getText().toString();
                 String password = passwordTV.getText().toString();
+                Log.d("home", getSha256Hash("admin"));
 
                 // checking if the entered text is empty or not.
                 if (TextUtils.isEmpty(userName) && TextUtils.isEmpty(password)) {
@@ -50,4 +55,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    public String getSha256Hash(String password) {
+        try {
+            MessageDigest digest = null;
+            try {
+                digest = MessageDigest.getInstance("SHA-256");
+            } catch (NoSuchAlgorithmException e1) {
+                e1.printStackTrace();
+            }
+            digest.reset();
+            return bin2hex(digest.digest(password.getBytes()));
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    private String bin2hex(byte[] data) {
+        StringBuilder hex = new StringBuilder(data.length * 2);
+        for (byte b : data)
+            hex.append(String.format("%02x", b & 0xFF));
+        return hex.toString();
+    }
 }
+
