@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class AdjTemp extends AppCompatActivity {
+public class AdjustTemp extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_adj_temp);
+        setContentView(R.layout.activity_adjust_temp);
     }
 }
