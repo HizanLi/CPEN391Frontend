@@ -22,27 +22,5 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        logoutBtn = findViewById(R.id.idBtnLogout);
-
-        // initializing our variables
-        userNameTV = findViewById(R.id.idTVUserName);
-
-        // getting data from intent.
-        String name = getIntent().getStringExtra("username");
-
-        // setting data to our text view.
-        userNameTV.setText(name);
-
-        // initializing click listener for logout button
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // calling a method to logout our user.
-                Toast.makeText(HomeActivity.this, "User Logged Out", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(HomeActivity.this, MainActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
     }
 }

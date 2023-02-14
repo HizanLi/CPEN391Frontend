@@ -38,24 +38,24 @@ public class MainActivity extends AppCompatActivity {
 
                 Toast.makeText(MainActivity.this, "Send", Toast.LENGTH_SHORT).show();
 
-                ServerConnection server = new ServerConnection();
-                String result = server.checkConnection("1", "2", getApplicationContext());
-                Log.d(TAG, result);
-                Log.d(TAG, "Returned");
-//                // checking if the entered text is empty or not.
-//                if (TextUtils.isEmpty(userName) && TextUtils.isEmpty(password)) {
-//                    Toast.makeText(MainActivity.this, "Please enter user name and password", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                if(userName.equals("admin") && password.equals("admin")){
-//                    //correct
-//                    Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
-//                    Intent i = new Intent(MainActivity.this, HomeActivity.class);
-//                    i.putExtra("username", userName);
-//                    startActivity(i);
-//                }else{
-//                    Toast.makeText(MainActivity.this,"Incorrect Password or Username",Toast.LENGTH_SHORT).show();
-//                }
+//                ServerConnection server = new ServerConnection();
+//                String result = server.checkConnection("1", "2", getApplicationContext());
+//                Log.d(TAG, result);
+//                Log.d(TAG, "Returned");
+                // checking if the entered text is empty or not.
+                if (TextUtils.isEmpty(userName) && TextUtils.isEmpty(password)) {
+                    Toast.makeText(MainActivity.this, "Please enter user name and password", Toast.LENGTH_SHORT).show();
+                }
+
+                if(userName.equals("admin") && password.equals("admin")){
+                    //correct
+                    Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(MainActivity.this, HomeActivity.class);
+                    i.putExtra("username", userName);
+                    startActivity(i);
+                }else{
+                    Toast.makeText(MainActivity.this,"Incorrect Password or Username",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
