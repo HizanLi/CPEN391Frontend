@@ -79,13 +79,13 @@
         app:cs_circle_stroke_width="30dp"
         app:cs_circle_style="round"
         app:cs_disable_pointer="false"
+        app:cs_start_angle="126"
         app:cs_end_angle="54"
         app:cs_max="9"
         app:cs_negative_enabled="false"
         app:cs_pointer_angle="0"
         app:cs_pointer_color="@color/white"
         app:cs_pointer_stroke_width="30dp"
-        app:cs_start_angle="126"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -103,7 +103,7 @@
         app:layout_constraintVertical_bias="0.45">
 
         <TextView
-            android:id="@+id/temperature"
+            android:id="@+id/target_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -183,6 +183,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
+            android:id="@+id/tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
