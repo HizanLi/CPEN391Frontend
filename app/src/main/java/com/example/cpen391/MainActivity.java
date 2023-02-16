@@ -1,22 +1,34 @@
 package com.example.cpen391;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
+    public final String VM_public_ip = "http://3.96.148.29:8000/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,31 +45,55 @@ public class MainActivity extends AppCompatActivity {
                 // on below line we are getting data from our edit text.
                 String userName = usernameTV.getText().toString();
                 String password = passwordTV.getText().toString();
-//                Log.d("userName sha256-ed: ", getSha256Hash(userName));
-//                Log.d("password sha256-ed: ", getSha256Hash(password));
-
                 Toast.makeText(MainActivity.this, "Send", Toast.LENGTH_SHORT).show();
 
-//                ServerConnection server = new ServerConnection();
-//                String result = server.checkConnection("1", "2", getApplicationContext());
-//                Log.d(TAG, result);
-//                Log.d(TAG, "Returned");
                 // checking if the entered text is empty or not.
                 if (TextUtils.isEmpty(userName) && TextUtils.isEmpty(password)) {
                     Toast.makeText(MainActivity.this, "Please enter user name and password", Toast.LENGTH_SHORT).show();
-                }
-
-                if(userName.equals("admin") && password.equals("admin")){
-                    //correct
-                    Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(MainActivity.this, HomeActivity.class);
-                    i.putExtra("username", userName);
-                    startActivity(i);
                 }else{
-                    Toast.makeText(MainActivity.this,"Incorrect Password or Username", Toast.LENGTH_SHORT).show();
+                    login(getSha256Hash(userName.trim()), getSha256Hash(password.trim()));
                 }
             }
         });
+    }
+
+    private void login(String SHA256_username, String SHA256_password){
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("username", SHA256_username);
+        params.put("password", SHA256_password);
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        queue.start();
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "login", new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "response.toString()");
+                        Log.d(TAG, response.toString());
+                        try {
+                            int serverResponse = response.getInt("result");
+                            if(serverResponse == 1){
+                                Log.d(TAG, "Correct Password");
+                                Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(MainActivity.this, HomeActivity.class);
+                                startActivity(i);
+                            }else{
+                                Log.d(TAG, "Incorrect Password");
+                                Toast.makeText(MainActivity.this,"Incorrect Password or Username", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(MainActivity.this,"Server Error", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this,"Network Error", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onErrorResponse " + error.getMessage());
+                    }
+                });
+        queue.add(request);
     }
     public String getSha256Hash(String password) {
         try {

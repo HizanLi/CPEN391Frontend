@@ -1,6 +1,9 @@
 package com.example.cpen391;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,20 +22,43 @@ import java.util.HashMap;
 
 public class ServerConnection {
 
-    public final String VM_public_ip = "http://15.222.207.245:8000/";
+    public final String VM_public_ip = "http://3.96.148.29:8000/";
     private final String TAG = "ServerConnection";
 
+    public volatile int loginDone = 0;
     public String checkConnection(String SHA256_username, String SHA256_password, Context context){
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("username", SHA256_username);
         params.put("password", SHA256_password);
-        sendRequestToServer(params,"login",context);
         return "AllDone";
     }
+    /*
+    *  Return:
+    *  int 1 on success (correct password and username)
+    *  int 0 on fail (incorrect password or username)
+    *  int -1 on fail (no response from server)
+    * */
+    public int login(String SHA256_username, String SHA256_password, Context context){
 
-    public int login(String SHA256_username, String SHA256_password){
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("username", SHA256_username);
+        params.put("password", SHA256_password);
 
-        return -1;
+        int sleepCounter = 0;
+        while (loginDone != 1) {
+            Log.d(TAG, "sleepCounter: "+ sleepCounter);
+            Log.d(TAG, "loginDone: "+ loginDone);
+            sleepCounter += 1;
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
+            if (sleepCounter > 10) {
+                return -1;
+            }
+        }
+        return 1;
     }
 
     public int getCurrentData(String SHA256_username, String SHA256_password){
@@ -48,24 +74,5 @@ public class ServerConnection {
     public int adjustTemp(String SHA256_username, String SHA256_password, double temperature){
 
         return -1;
-    }
-
-    private void sendRequestToServer(HashMap<String, String> data, String action,Context context){
-        RequestQueue queue = Volley.newRequestQueue(context);
-        queue.start();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + action, new JSONObject(data),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d(TAG, "Unable to reload credit");
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "onErrorResponse updateUI " + "Error: " + error.getMessage());
-                    }
-                });
-        queue.add(request);
     }
 }

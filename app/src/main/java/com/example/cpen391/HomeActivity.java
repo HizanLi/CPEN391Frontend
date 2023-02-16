@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cpen391.R.id;
+
 public class HomeActivity extends AppCompatActivity {
 
     // creating a variable
@@ -22,5 +24,16 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Button history = (Button) findViewById(id.viewHistory);
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(HomeActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(HomeActivity.this, HistoryActivity.class);
+                startActivity(i);
+            }
+        });
+
     }
 }
