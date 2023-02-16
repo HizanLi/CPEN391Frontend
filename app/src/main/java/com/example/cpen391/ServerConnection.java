@@ -23,12 +23,11 @@ public class ServerConnection {
     private final String TAG = "ServerConnection";
 
     public String checkConnection(String SHA256_username, String SHA256_password, Context context){
-
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("username", SHA256_username);
         params.put("password", SHA256_password);
-
-        return "here";
+        sendRequestToServer(params,"login",context);
+        return "AllDone";
     }
 
     public int login(String SHA256_username, String SHA256_password){
@@ -51,10 +50,10 @@ public class ServerConnection {
         return -1;
     }
 
-    private void sendRequestToServer(HashMap<String, String> data, Context context){
+    private void sendRequestToServer(HashMap<String, String> data, String action,Context context){
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.start();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "login", new JSONObject(data),
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + action, new JSONObject(data),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
