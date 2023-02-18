@@ -19,7 +19,8 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        BarChart chart = findViewById(R.id.barchart);
+        BarChart chartTemp = findViewById(R.id.barcharttemp);
+        BarChart chartHum = findViewById(R.id.barcharthum);
 
         ArrayList<BarEntry> NoOfEmp = new ArrayList<BarEntry>();
 
@@ -33,6 +34,7 @@ public class HistoryActivity extends AppCompatActivity {
         NoOfEmp.add(new BarEntry(8, 17));
         NoOfEmp.add(new BarEntry(9, 18));
         NoOfEmp.add(new BarEntry(10, 20));
+
         ArrayList<String> year = new ArrayList<String>();
 
         year.add("2008");
@@ -47,10 +49,12 @@ public class HistoryActivity extends AppCompatActivity {
         year.add("2017");
 
         BarDataSet bardataset = new BarDataSet(NoOfEmp, "Temperature");
-        chart.animateY(10);
+        chartHum.animateY(10);
+        chartTemp.animateY(10);
         BarData data = new BarData(bardataset, bardataset);
         bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
-        chart.setData(data);
+        chartHum.setData(data);
+        chartTemp.setData(data);
     }
 }
 

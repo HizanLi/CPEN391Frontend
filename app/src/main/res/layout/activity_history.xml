@@ -8,10 +8,17 @@
 
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barchart"
+        android:id="@+id/barcharttemp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barcharthum"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barcharttemp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

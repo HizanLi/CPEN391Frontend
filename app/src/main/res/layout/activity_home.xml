@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/colorTheme"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#73C2FB"
+    android:background="#0088f0"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -146,13 +147,14 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <Button
                 android:layout_marginEnd="5dp"
-                android:id="@+id/clear"
+                android:id="@+id/reset"
                 android:backgroundTint="#0F52BA"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clear" />
+                android:text="Reset" />
 
             <Button
                 android:layout_marginStart="5dp"
