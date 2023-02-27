@@ -17,7 +17,7 @@
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barcharthum"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barcharttemp" />

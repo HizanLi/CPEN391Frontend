@@ -1,0 +1,49 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/messages_header">
+
+        <EditTextPreference
+            app:key="signature"
+            app:title="@string/signature_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="reply"
+            app:entries="@array/reply_entries"
+            app:entryValues="@array/reply_values"
+            app:key="reply"
+            app:title="@string/reply_title"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/temp_header">
+
+        <SwitchPreferenceCompat
+            app:key="limitation"
+            app:summaryOff="@string/limitation_summary_off"
+            app:summaryOn="@string/limitation_summary_on"
+            app:title="@string/limitation_title"
+            android:defaultValue="true"/>
+
+        <EditTextPreference
+            android:defaultValue="18"
+            android:key="upperTempLimit"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Set Upper Temperature Limit" />
+
+        <EditTextPreference
+            android:defaultValue="50"
+            android:inputType="number"
+            android:key="lowerTempLimit"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Set Lower Temperature Limit"
+            app:isPreferenceVisible="true"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

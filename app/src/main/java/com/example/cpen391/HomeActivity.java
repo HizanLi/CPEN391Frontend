@@ -1,17 +1,25 @@
 package com.example.cpen391;
 
+import static android.app.PendingIntent.getActivity;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.preference.EditTextPreference;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -49,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     private int redWarm = 255, greenWarm = 265, blueWarm = 265;
     private int redCold = 153, greenCold = 190, blueCold = 255;
 
+    private ImageView setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,34 +78,38 @@ public class HomeActivity extends AppCompatActivity {
         submit = findViewById(R.id.submit);
         reset = findViewById(R.id.reset);
         history = findViewById(R.id.viewHistory);
+        setting = findViewById(id.setting);
 
         ConstraintLayout back = findViewById(id.colorTheme);
 
-
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         seekbar = findViewById(R.id.seek_bar);
         seekbar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
+            //TODO implement temperature range
             @Override
             public void onProgressChanged(@Nullable CircularSeekBar circularSeekBar, float v, boolean b){
-                Log.d(TAG, "Progress: " + seekbar.getProgress());
-                float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
-                Log.d(TAG, "currentTemp: "+ currentTemp);
-                int intTemp = (int)currentTemp;
-                target_temperature.setText(intTemp + "C");
-                if(intTemp > thresholdTemp){
-                    back.setBackgroundColor(Color.rgb(redWarm, greenWarm - 2 * intTemp, blueWarm - 2 * intTemp));
-                }else {
-                    back.setBackgroundColor(Color.rgb(redCold + intTemp, greenCold + intTemp, blueCold ));
-                }
+                String all = sharedPref.getAll().toString();
+                Log.d(TAG, all);
+//                Log.d(TAG, "Progress: " + seekbar.getProgress());
+//                float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
+//                Log.d(TAG, "currentTemp: "+ currentTemp);
+//                int intTemp = (int)currentTemp;
+//                target_temperature.setText(intTemp + "C");
+//                if(intTemp > thresholdTemp){
+//                    back.setBackgroundColor(Color.rgb(redWarm, greenWarm - 2 * intTemp, blueWarm - 2 * intTemp));
+//                }else {
+//                    back.setBackgroundColor(Color.rgb(redCold + intTemp, greenCold + intTemp, blueCold ));
+//                }
             }
 
             @Override
             public void onStopTrackingTouch(@Nullable CircularSeekBar circularSeekBar) {
-                Log.d(TAG, "Progress: " + seekbar.getProgress());
-                float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
-                Log.d(TAG, "currentTemp: "+ currentTemp);
-                int intTemp = (int)currentTemp;
-                target_temperature.setText(intTemp + "C");
+//                Log.d(TAG, "Progress: " + seekbar.getProgress());
+//                float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
+//                Log.d(TAG, "currentTemp: "+ currentTemp);
+//                int intTemp = (int)currentTemp;
+//                target_temperature.setText(intTemp + "C");
             }
 
             @Override
@@ -132,7 +145,7 @@ public class HomeActivity extends AppCompatActivity {
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                 queue.start();
 
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "login", new JSONObject(data),
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "power", new JSONObject(data),
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -186,6 +199,15 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 update();
+            }
+        });
+
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(HomeActivity.this,"Update Settings", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
+                startActivity(i);
             }
         });
     }

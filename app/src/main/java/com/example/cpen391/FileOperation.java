@@ -55,7 +55,7 @@ public class FileOperation {
         }
     }
 
-    public void cleanSearchCaches(Context applicationContext){
+    public void cleanCaches(Context applicationContext){
         if( applicationContext == null){
 //            Log.d(TAG, "applicationContext Null");
             return;

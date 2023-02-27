@@ -34,9 +34,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //for testing
         Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
         Intent i = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(i);
+        //for testing
 
         TextView usernameTV =(TextView) findViewById(R.id.email);
         TextView passwordTV =(TextView) findViewById(R.id.password);
@@ -70,10 +72,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void login(String SHA256_username, String SHA256_password){
+    private void login(String username, String password){
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("username", SHA256_username);
-        params.put("password", SHA256_password);
+        params.put("username", getSha256Hash(username));
+        params.put("password", getSha256Hash(password));
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.start();
 
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d(TAG, "Correct Password");
                                 Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(MainActivity.this, HomeActivity.class);
+                                i.putExtra("username", username);
+                                i.putExtra("password", password);
                                 startActivity(i);
                             }else{
                                 Log.d(TAG, "Incorrect Password");
