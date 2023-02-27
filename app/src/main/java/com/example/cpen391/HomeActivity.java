@@ -53,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private int desire;
 
+    private int upperInt = -1, lowerInt = -1;
     private int thresholdTemp = 30;
     private int redWarm = 255, greenWarm = 265, blueWarm = 265;
     private int redCold = 153, greenCold = 190, blueCold = 255;
@@ -69,6 +70,15 @@ public class HomeActivity extends AppCompatActivity {
         minTemp = 0;
         maxTemp = 100;
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String upper = sharedPref.getString("upperTempLimit", "");
+        upperInt = Integer.parseInt(upper);
+        Log.d("upper: ", String.valueOf(upperInt));
+
+        String lower = sharedPref.getString("lowerTempLimit", "");
+        lowerInt = Integer.parseInt(lower);
+        Log.d("lower: ", String.valueOf(lowerInt));
+
         target_temperature = findViewById(R.id.target_temperature);
         ctemperature = findViewById(R.id.ctemperature);
         chumidity = findViewById(R.id.chumidity);
@@ -82,25 +92,33 @@ public class HomeActivity extends AppCompatActivity {
 
         ConstraintLayout back = findViewById(id.colorTheme);
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         seekbar = findViewById(R.id.seek_bar);
         seekbar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             //TODO implement temperature range
             @Override
             public void onProgressChanged(@Nullable CircularSeekBar circularSeekBar, float v, boolean b){
-                String all = sharedPref.getAll().toString();
-                Log.d(TAG, all);
-//                Log.d(TAG, "Progress: " + seekbar.getProgress());
-//                float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
-//                Log.d(TAG, "currentTemp: "+ currentTemp);
-//                int intTemp = (int)currentTemp;
-//                target_temperature.setText(intTemp + "C");
-//                if(intTemp > thresholdTemp){
-//                    back.setBackgroundColor(Color.rgb(redWarm, greenWarm - 2 * intTemp, blueWarm - 2 * intTemp));
-//                }else {
-//                    back.setBackgroundColor(Color.rgb(redCold + intTemp, greenCold + intTemp, blueCold ));
-//                }
+
+
+                if(lowerInt > upperInt){
+                    Toast.makeText(HomeActivity.this, "lowerInt > upperInt, Please check you setting page", Toast.LENGTH_SHORT).show();
+                }else{
+                    Log.d(TAG, "Progress: " + seekbar.getProgress());
+                    float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
+                    int intTemp = (int)currentTemp;
+                    if(lowerInt <= intTemp && intTemp <= upperInt){
+                        target_temperature.setText(intTemp + "C");
+                        if(intTemp > thresholdTemp){
+                            back.setBackgroundColor(Color.rgb(redWarm, greenWarm - 2 * intTemp, blueWarm - 2 * intTemp));
+                        }else {
+                            back.setBackgroundColor(Color.rgb(redCold + intTemp, greenCold + intTemp, blueCold ));
+                        }
+                    }else{
+
+                    }
+
+                }
             }
 
             @Override
@@ -244,5 +262,15 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 });
         queue.add(request);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", ""));
+        Log.d("upper: ", String.valueOf(upperInt));
+        lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", ""));
+        Log.d("lower: ", String.valueOf(lowerInt));
     }
 }
