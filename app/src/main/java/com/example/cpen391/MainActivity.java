@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void login(String username, String password){
         HashMap<String, String> params = new HashMap<String, String>();
+        //TODO: check with server about Json format
         params.put("username", getSha256Hash(username));
         params.put("password", getSha256Hash(password));
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             int serverResponse = response.getInt("result");
                             if(serverResponse == 1){
+                                //TODO: Store username to setting for later usage
                                 Log.d(TAG, "Correct Password");
                                 Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(MainActivity.this, HomeActivity.class);

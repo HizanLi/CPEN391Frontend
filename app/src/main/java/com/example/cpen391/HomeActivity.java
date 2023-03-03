@@ -70,41 +70,38 @@ public class HomeActivity extends AppCompatActivity {
         minTemp = 0;
         maxTemp = 100;
 
+        //Setting
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String upper = sharedPref.getString("upperTempLimit", "");
-        upperInt = Integer.parseInt(upper);
+        upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", ""));
+        lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", ""));
         Log.d("upper: ", String.valueOf(upperInt));
-
-        String lower = sharedPref.getString("lowerTempLimit", "");
-        lowerInt = Integer.parseInt(lower);
         Log.d("lower: ", String.valueOf(lowerInt));
 
+        //Textview
         target_temperature = findViewById(R.id.target_temperature);
         ctemperature = findViewById(R.id.ctemperature);
         chumidity = findViewById(R.id.chumidity);
         tips = findViewById(R.id.tips);
 
+        //Buttons
         power = findViewById(id.power);
         submit = findViewById(R.id.submit);
         reset = findViewById(R.id.reset);
         history = findViewById(R.id.viewHistory);
+
+        //ImageView
         setting = findViewById(id.setting);
 
         ConstraintLayout back = findViewById(id.colorTheme);
 
-
-
         seekbar = findViewById(R.id.seek_bar);
         seekbar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
-            //TODO implement temperature range
             @Override
             public void onProgressChanged(@Nullable CircularSeekBar circularSeekBar, float v, boolean b){
-
-
                 if(lowerInt > upperInt){
                     Toast.makeText(HomeActivity.this, "lowerInt > upperInt, Please check you setting page", Toast.LENGTH_SHORT).show();
                 }else{
-                    Log.d(TAG, "Progress: " + seekbar.getProgress());
+//                    Log.d(TAG, "Progress: " + seekbar.getProgress());
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
                     int intTemp = (int)currentTemp;
                     if(lowerInt <= intTemp && intTemp <= upperInt){
@@ -115,24 +112,21 @@ public class HomeActivity extends AppCompatActivity {
                             back.setBackgroundColor(Color.rgb(redCold + intTemp, greenCold + intTemp, blueCold ));
                         }
                     }else{
-
+                        Toast.makeText(HomeActivity.this, "Not in desired range", Toast.LENGTH_SHORT).show();
                     }
-
                 }
             }
 
             @Override
             public void onStopTrackingTouch(@Nullable CircularSeekBar circularSeekBar) {
-//                Log.d(TAG, "Progress: " + seekbar.getProgress());
-//                float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
-//                Log.d(TAG, "currentTemp: "+ currentTemp);
-//                int intTemp = (int)currentTemp;
-//                target_temperature.setText(intTemp + "C");
+                String desired_temp = target_temperature.getText().toString();
+                Log.d(TAG, "desired_temp: " + desired_temp);
+                //TODO: Store this target somewhere
             }
 
             @Override
             public void onStartTrackingTouch(@Nullable CircularSeekBar circularSeekBar){
-
+                //TODO: Store desired_temp before for reset purpose
             }
         });
 
@@ -150,6 +144,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String status = power.getText().toString();
                 HashMap<String, String> data = new HashMap<>();
+                //TODO: check connection with sever
                 data.put("username", "SHA256_username");
                 data.put("deviceId", "deviceId");
                 if(status.equalsIgnoreCase("Power ON")){
@@ -187,6 +182,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 HashMap<String, String> data = new HashMap<>();
+                //TODO: check connection with sever
                 data.put("username", "SHA256_username");
                 data.put("deviceId", "deviceId");
                 data.put("desiredTemp", "123");
@@ -231,6 +227,7 @@ public class HomeActivity extends AppCompatActivity {
     }
     private void update(){
         HashMap<String, String> data = new HashMap<>();
+        //TODO: check connection with sever
         data.put("username", "SHA256_username");
         data.put("deviceId", "deviceId");
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
@@ -242,13 +239,22 @@ public class HomeActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "response.toString()");
                         Log.d(TAG, response.toString());
-                        try {
+                        try {//TODO: check connection with sever
+                            //current
                             int ctemp = response.getInt("temperature");
                             int chum = response.getInt("humidity");
+                            //desired
                             desire = response.getInt("desired_temp");
+                            //on or off
+                            int status = response.getInt("power");
                             chumidity.setText("" + chum);
                             ctemperature.setText("" + ctemp);
                             target_temperature.setText("" + desire);
+                            if(desire == 1){
+                                power.setText("Power ON");
+                            }else{
+                                power.setText("Power OFF");
+                            }
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -267,6 +273,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+        update();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", ""));
         Log.d("upper: ", String.valueOf(upperInt));
