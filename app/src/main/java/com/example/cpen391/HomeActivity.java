@@ -228,6 +228,8 @@ public class HomeActivity extends AppCompatActivity {
     private void update(){
         HashMap<String, String> data = new HashMap<>();
         //TODO: check connection with sever
+        //TODO: reset seekbar according to desired temperature
+
         data.put("username", "SHA256_username");
         data.put("deviceId", "deviceId");
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
