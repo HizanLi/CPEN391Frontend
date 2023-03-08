@@ -45,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private TextView userNameTV;
     private final String TAG = "HomeActivity";
+
     // button for logout
     private Button logoutBtn;
     private TextView ctemperature, chumidity, tips, target_temperature;
@@ -53,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private int desire;
 
-    private int upperInt = -1, lowerInt = -1;
+    private int upperInt, lowerInt;
     private final int thresholdTemp = 30;
     private final int redWarm = 255, greenWarm = 265, blueWarm = 265;
     private final int redCold = 153, greenCold = 190, blueCold = 255;
@@ -70,12 +71,19 @@ public class HomeActivity extends AppCompatActivity {
         minTemp = 0;
         maxTemp = 100;
 
-        //Setting
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", ""));
-        lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", ""));
-        Log.d("upper: ", String.valueOf(upperInt));
-        Log.d("lower: ", String.valueOf(lowerInt));
+//        Setting
+        try{
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", null));
+            lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", null));
+            Log.d("upper: ", String.valueOf(upperInt));
+            Log.d("lower: ", String.valueOf(lowerInt));
+        }catch (Exception e){
+            upperInt = 100;
+            lowerInt = 0;
+        }
+
+
 
         //Textview
         target_temperature = findViewById(R.id.target_temperature);
@@ -276,11 +284,18 @@ public class HomeActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         update();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", ""));
-        Log.d("upper: ", String.valueOf(upperInt));
-        lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", ""));
-        Log.d("lower: ", String.valueOf(lowerInt));
+        try{
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", ""));
+            Log.d("upper: ", String.valueOf(upperInt));
+            lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", ""));
+            Log.d("lower: ", String.valueOf(lowerInt));
+        }catch (Exception e){
+            //first time open
+            upperInt = 100;
+            lowerInt = 0;
+        }
+
     }
 
 }

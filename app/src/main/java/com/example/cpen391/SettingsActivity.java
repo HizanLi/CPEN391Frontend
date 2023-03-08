@@ -63,21 +63,6 @@ public class SettingsActivity extends AppCompatActivity {
                 Log.d("lower: ", lower);
             }
         });
-
-//        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-//            @Override
-//            public void onActivityResult(ActivityResult result) {
-//                Log.d(TAG, "I am vback");
-//                IntentResult intentResult = IntentIntegrator.parseActivityResult(result.getResultCode(), result.getResultCode(), result.getData());
-//                // if the intentResult is null then
-//                // toast a message as "cancelled"
-//                if (intentResult != null) {
-//                    if (intentResult.getContents() == null) {
-//                        Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//        });
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -85,19 +70,21 @@ public class SettingsActivity extends AppCompatActivity {
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         // if the intentResult is null then
         // toast a message as "cancelled"
-        Log.d(TAG, "as");
+        Log.d(TAG, "a------------------------------------------------------------------s");
         if (intentResult != null) {
             if (intentResult.getContents() == null) {
                 Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "unsuccess");
             } else {
                 // if the intentResult is not null we'll set
                 // the content and format of scan message
-
+                Log.d(TAG, "success");
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private final String TAG = "SettingsFragment";
         @Override
