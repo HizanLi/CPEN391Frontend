@@ -54,9 +54,9 @@ public class HomeActivity extends AppCompatActivity {
     private int desire;
 
     private int upperInt = -1, lowerInt = -1;
-    private int thresholdTemp = 30;
-    private int redWarm = 255, greenWarm = 265, blueWarm = 265;
-    private int redCold = 153, greenCold = 190, blueCold = 255;
+    private final int thresholdTemp = 30;
+    private final int redWarm = 255, greenWarm = 265, blueWarm = 265;
+    private final int redCold = 153, greenCold = 190, blueCold = 255;
 
     private ImageView setting;
 
@@ -243,12 +243,12 @@ public class HomeActivity extends AppCompatActivity {
                         Log.d(TAG, response.toString());
                         try {//TODO: check connection with sever
                             //current
-                            int ctemp = response.getInt("temperature");
-                            int chum = response.getInt("humidity");
+                            int ctemp = response.getInt("current_temp");
+                            int chum = response.getInt("current_hum");
                             //desired
-                            desire = response.getInt("desired_temp");
+                            desire = response.getInt("desire_temp");
                             //on or off
-                            int status = response.getInt("power");
+                            int status = response.getInt("status");
                             chumidity.setText("" + chum);
                             ctemperature.setText("" + ctemp);
                             target_temperature.setText("" + desire);
@@ -282,4 +282,5 @@ public class HomeActivity extends AppCompatActivity {
         lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", ""));
         Log.d("lower: ", String.valueOf(lowerInt));
     }
+
 }

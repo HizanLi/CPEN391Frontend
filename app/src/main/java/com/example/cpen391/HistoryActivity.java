@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HistoryActivity extends AppCompatActivity{
+    private final int Temp = 1, Hum = 2;
     private final String TAG = "HistoryActivity";
     public final String VM_public_ip = "http://3.96.148.29:8000/";
     BarChart chartTemp, chartHum;
@@ -38,7 +39,41 @@ public class HistoryActivity extends AppCompatActivity{
         chartTemp = findViewById(R.id.barcharttemp);
         chartHum = findViewById(R.id.barcharthum);
 
-        getHistory();
+        JSONObject test= new JSONObject();
+        JSONArray tempReading = new JSONArray();
+        tempReading.put(10);
+        tempReading.put(11);
+        tempReading.put(12);
+        tempReading.put(13);
+        tempReading.put(14);
+        tempReading.put(15);
+        tempReading.put(16);
+        tempReading.put(17);
+        tempReading.put(18);
+        tempReading.put(19);
+
+        JSONArray readings = new JSONArray();
+        readings.put(10);
+        readings.put(11);
+        readings.put(12);
+        readings.put(13);
+        readings.put(14);
+        readings.put(15);
+        readings.put(16);
+        readings.put(17);
+        readings.put(18);
+        readings.put(19);
+        try {
+            test.put("temperature_history", tempReading);
+            test.put("humidity_history", readings);
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        updateChart(test, Hum);
+        updateChart(test, Temp);
+
+//        getHistory();
     }
 
     private void getHistory(){
@@ -54,30 +89,8 @@ public class HistoryActivity extends AppCompatActivity{
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "response.toString()");
                         Log.d(TAG, response.toString());
-                        try {
-                            JSONArray temps = response.getJSONArray("temperature_history");
-                            ArrayList<BarEntry> NoOfTemps = new ArrayList<BarEntry>();
-                            JSONArray hums = response.getJSONArray("humidity_history");
-                            ArrayList<BarEntry> NoOfHums = new ArrayList<BarEntry>();
-                            for(int i = 0; i < 10; i ++){
-                                NoOfTemps.add(new BarEntry(i, temps.getInt(i)));
-                                NoOfHums.add(new BarEntry(i, hums.getInt(i)));
-                            }
-                            BarDataSet bardatasetTemps = new BarDataSet(NoOfTemps, "Temperature");
-                            BarDataSet bardatasetHums = new BarDataSet(NoOfHums, "Humidity");
-
-                            chartHum.animateY(10);
-                            chartTemp.animateY(10);
-                            BarData dataTemp = new BarData(bardatasetTemps, bardatasetTemps);
-                            BarData dataHum = new BarData(bardatasetHums, bardatasetHums);
-                            bardatasetTemps.setColors(ColorTemplate.COLORFUL_COLORS);
-                            bardatasetHums.setColors(ColorTemplate.COLORFUL_COLORS);
-                            chartHum.setData(dataTemp);
-                            chartTemp.setData(dataHum);
-
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        updateChart(response, Temp);
+                        updateChart(response, Hum);
                     }
                 },
                 new Response.ErrorListener() {
@@ -88,6 +101,46 @@ public class HistoryActivity extends AppCompatActivity{
                     }
                 });
         queue.add(request);
-    }}
+    }
+
+    private void updateChart(JSONObject data, int chartType){
+        try {
+            JSONArray readingJSONArray;
+            BarDataSet readingBarDataSet;
+
+            ArrayList<BarEntry> readingBarEntry = new ArrayList<BarEntry>();
+            if(chartType == Temp){
+                readingJSONArray = data.getJSONArray("temperature_history");
+            }else{
+                readingJSONArray = data.getJSONArray("humidity_history");
+            }
+
+            for(int i = 0; i < 10; i ++){
+                readingBarEntry.add(new BarEntry(i, readingJSONArray.getInt(i)));
+            }
+
+            chartHum.animateY(10);
+            chartTemp.animateY(10);
+
+            if(chartType == Temp){
+                readingBarDataSet = new BarDataSet(readingBarEntry, "Temperature");
+            }else{
+                readingBarDataSet = new BarDataSet(readingBarEntry, "Humidity");
+            }
+
+            BarData dataTemp = new BarData(readingBarDataSet, readingBarDataSet);
+            readingBarDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+
+            if(chartType == Temp){
+                chartTemp.setData(dataTemp);
+            }else{
+                chartHum.setData(dataTemp);
+            }
+
+        } catch (JSONException e) {
+            Log.d(TAG, "Format Error");
+        }
+    }
+}
 
 

@@ -2,7 +2,9 @@ package com.example.cpen391;
 
 import static android.app.PendingIntent.getActivity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -11,7 +13,13 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.EditTextPreference;
@@ -20,9 +28,12 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 public class SettingsActivity extends AppCompatActivity {
     private final String TAG = "SettingsActivity";
-
+    private ActivityResultLauncher<Intent> activityResultLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -51,8 +63,41 @@ public class SettingsActivity extends AppCompatActivity {
                 Log.d("lower: ", lower);
             }
         });
-    }
 
+//        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+//            @Override
+//            public void onActivityResult(ActivityResult result) {
+//                Log.d(TAG, "I am vback");
+//                IntentResult intentResult = IntentIntegrator.parseActivityResult(result.getResultCode(), result.getResultCode(), result.getData());
+//                // if the intentResult is null then
+//                // toast a message as "cancelled"
+//                if (intentResult != null) {
+//                    if (intentResult.getContents() == null) {
+//                        Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        // if the intentResult is null then
+        // toast a message as "cancelled"
+        Log.d(TAG, "as");
+        if (intentResult != null) {
+            if (intentResult.getContents() == null) {
+                Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+                // if the intentResult is not null we'll set
+                // the content and format of scan message
+
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private final String TAG = "SettingsFragment";
         @Override
@@ -81,6 +126,23 @@ public class SettingsActivity extends AppCompatActivity {
                     editText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "100")});
                 }
             });
+
+            Preference button = findPreference("qrScanner");
+            assert button != null;
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    //code for what you want it to do
+                    IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+                    intentIntegrator.setPrompt("Scan a barcode or QR Code");
+                    intentIntegrator.setOrientationLocked(true);
+                    intentIntegrator.initiateScan();
+                    return true;
+                }
+            });
+
+            EditTextPreference deviceID = findPreference("deviceID");
+            assert deviceID != null;
         }
     }
 }
