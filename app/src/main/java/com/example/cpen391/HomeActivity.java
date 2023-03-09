@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
     private final int thresholdTemp = 30;
     private final int redWarm = 255, greenWarm = 265, blueWarm = 265;
     private final int redCold = 153, greenCold = 190, blueCold = 255;
-    private String username, sha256username;
+    private String username, sha256username, deviceID;
     private ImageView setting;
 
     @Override
@@ -90,16 +90,19 @@ public class HomeActivity extends AppCompatActivity {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", null));
             lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", null));
+            deviceID = sharedPref.getString("typedDeviceID", null);
+
+            Log.d("deviceID: ", deviceID);
             Log.d("upper: ", String.valueOf(upperInt));
             Log.d("lower: ", String.valueOf(lowerInt));
 
         }catch (Exception e){
             upperInt = 100;
             lowerInt = 0;
+            deviceID = null;
 
             Log.d(TAG, "First time login to this app");
 
-            qrCodeScan();
         }
 
         //Textview
@@ -306,50 +309,21 @@ public class HomeActivity extends AppCompatActivity {
         Log.d(TAG, "onResume Called");
         try{
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", ""));
+            upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", null));
+            lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", null));
+            deviceID = sharedPref.getString("typedDeviceID", null);
+
+            Log.d("deviceID: ", deviceID);
             Log.d("upper: ", String.valueOf(upperInt));
-            lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", ""));
             Log.d("lower: ", String.valueOf(lowerInt));
+
         }catch (Exception e){
             //first time open
             upperInt = 100;
             lowerInt = 0;
+            deviceID = null;
             Log.d(TAG, "First time login to this app");
         }
 
     }
-
-    private void qrCodeScan(){
-        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
-        intentIntegrator.setPrompt("Scan a barcode or QR Code");
-        intentIntegrator.setOrientationLocked(true);
-        intentIntegrator.initiateScan();
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        // if the intentResult is null then
-        // toast a message as "cancelled"
-        Log.d(TAG, "b------------------------------------------------------------------b");
-        if (intentResult != null) {
-
-            if (intentResult.getContents() == null) {
-                Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
-            }else {
-                // if the intentResult is not null we'll set
-                // the content and format of scan message
-                String id = intentResult.getContents();
-                Log.d(TAG, id);
-                Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
-                i.putExtra("id", id);
-                startActivity(i);
-            }
-
-        } else {
-            Log.d(TAG, "NULL");
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
 }

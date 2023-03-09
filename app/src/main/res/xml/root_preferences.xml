@@ -5,7 +5,7 @@
 
         <EditTextPreference
             android:defaultValue="None"
-            android:key="typeDeviceID"
+            android:key="typedDeviceID"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Your Device ID"
