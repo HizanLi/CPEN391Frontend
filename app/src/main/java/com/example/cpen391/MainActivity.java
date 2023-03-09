@@ -25,10 +25,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+//Login page
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
+//    public final String VM_public_ip = getString(R.string.ipAddress);
     public final String VM_public_ip = "http://3.96.148.29:8000/";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void login(String username, String password){
         HashMap<String, String> params = new HashMap<String, String>();
+
         //TODO: check with server about Json format
+
         params.put("username", getSha256Hash(username));
         params.put("password", getSha256Hash(password));
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
@@ -89,12 +92,14 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             int serverResponse = response.getInt("result");
                             if(serverResponse == 1){
-                                //TODO: Store username to setting for later usage
+
                                 Log.d(TAG, "Correct Password");
                                 Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(MainActivity.this, HomeActivity.class);
+
                                 i.putExtra("username", username);
-                                i.putExtra("password", password);
+                                i.putExtra("sha256username", getSha256Hash(username));
+
                                 startActivity(i);
                             }else{
                                 Log.d(TAG, "Incorrect Password");

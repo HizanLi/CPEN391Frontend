@@ -29,6 +29,7 @@ import java.util.HashMap;
 public class HistoryActivity extends AppCompatActivity{
     private final int Temp = 1, Hum = 2;
     private final String TAG = "HistoryActivity";
+//    public final String VM_public_ip = getString(R.string.ipAddress);
     public final String VM_public_ip = "http://3.96.148.29:8000/";
     BarChart chartTemp, chartHum;
     @Override

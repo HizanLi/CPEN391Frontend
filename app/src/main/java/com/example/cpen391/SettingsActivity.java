@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,6 +23,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
@@ -33,7 +37,9 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class SettingsActivity extends AppCompatActivity {
     private final String TAG = "SettingsActivity";
-    private ActivityResultLauncher<Intent> activityResultLauncher;
+
+    public final String VM_public_ip = "http://3.96.148.29:8000/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,40 +55,22 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPref.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-                String ss = sharedPreferences.getAll().toString();
-                Toast.makeText(SettingsActivity.this, "aaaaaaa", Toast.LENGTH_SHORT).show();
-                Log.d("SETTING: ", ss);
-                String upper = sharedPreferences.getString("upperTempLimit", "");
-                Log.d("upper: ", upper);
-                String lower = sharedPreferences.getString("lowerTempLimit", "");
-                Log.d("lower: ", lower);
-            }
-        });
     }
+    //Purpose: use camera to scan the QR code
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        // if the intentResult is null then
-        // toast a message as "cancelled"
-        Log.d(TAG, "a------------------------------------------------------------------s");
-        if (intentResult != null) {
-            if (intentResult.getContents() == null) {
-                Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "unsuccess");
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "AAAAAASDFGHJK");
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
-                // if the intentResult is not null we'll set
-                // the content and format of scan message
-                Log.d(TAG, "success");
+                Toast.makeText(this, "Scanned : " + result.getContents(), Toast.LENGTH_LONG).show();
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
+        Log.d(TAG, "DCFVYGBUHNJK");
+
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -91,7 +79,27 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-            final SharedPreferences.Editor editor = sharedPref.edit();
+
+            sharedPref.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+                    Preference preference = findPreference(s);
+
+                    Log.d("s is: ", s);
+                    String ss = sharedPreferences.getAll().toString();
+                    Log.d("SETTING: ", ss);
+
+                    if(preference instanceof EditTextPreference){
+                        if(s.equalsIgnoreCase("lowerTempLimit") ||s.equalsIgnoreCase("upperTempLimit")){
+                            String temp = sharedPreferences.getString(s, "");
+                            preference.setSummary("Current Setting: " + temp + "C");
+                        }else if(s.equalsIgnoreCase("typeDeviceID")){
+                            String id = sharedPreferences.getString(s, "");
+                            preference.setSummary("Current Device ID: " + id);
+                        }
+                    }
+                }
+            });
 
             EditTextPreference upperLim = findPreference("upperTempLimit");
 
@@ -103,6 +111,7 @@ public class SettingsActivity extends AppCompatActivity {
                     editText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "100")});
                 }
             });
+            upperLim.setSummary("Current Setting: " + upperLim.getText() + "C");
 
             EditTextPreference lowerLim = findPreference("lowerTempLimit");
             assert lowerLim != null;
@@ -113,23 +122,22 @@ public class SettingsActivity extends AppCompatActivity {
                     editText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "100")});
                 }
             });
+            lowerLim.setSummary("Current Setting: " + lowerLim.getText() + "C");
 
             Preference button = findPreference("qrScanner");
             assert button != null;
             button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    //code for what you want it to do
-                    IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-                    intentIntegrator.setPrompt("Scan a barcode or QR Code");
-                    intentIntegrator.setOrientationLocked(true);
-                    intentIntegrator.initiateScan();
+                    IntentIntegrator integrator = IntentIntegrator.forSupportFragment(SettingsFragment.this);
+                    integrator.setOrientationLocked(false);
+                    integrator.setPrompt("Scan QR code");
+                    integrator.setBeepEnabled(false);
+                    integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+                    integrator.initiateScan();
                     return true;
                 }
             });
-
-            EditTextPreference deviceID = findPreference("deviceID");
-            assert deviceID != null;
         }
     }
 }

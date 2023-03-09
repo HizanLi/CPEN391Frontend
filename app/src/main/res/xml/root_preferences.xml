@@ -5,7 +5,7 @@
 
         <EditTextPreference
             android:defaultValue="None"
-            android:key="deviceID"
+            android:key="typeDeviceID"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Your Device ID"
@@ -28,21 +28,22 @@
             android:defaultValue="true"/>
 
         <EditTextPreference
-            android:defaultValue="18"
-            android:key="upperTempLimit"
+            android:defaultValue="50"
+            app:summary="Current Setting: 50C"
             android:inputType="number"
+            android:key="upperTempLimit"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Set Upper Temperature Limit" />
 
         <EditTextPreference
-            android:defaultValue="50"
+            android:defaultValue="10"
+            app:summary="Current Setting: 10C"
             android:inputType="number"
             android:key="lowerTempLimit"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Set Lower Temperature Limit"
-            app:isPreferenceVisible="true"/>
+            android:title="Set Lower Temperature Limit" />
 
     </PreferenceCategory>
 

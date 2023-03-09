@@ -28,6 +28,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.cpen391.R.id;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +40,8 @@ import java.util.HashMap;
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
 public class HomeActivity extends AppCompatActivity {
+
+//    public final String VM_public_ip = getString(R.string.ipAddress);
 
     public final String VM_public_ip = "http://3.96.148.29:8000/";
 
@@ -58,13 +62,23 @@ public class HomeActivity extends AppCompatActivity {
     private final int thresholdTemp = 30;
     private final int redWarm = 255, greenWarm = 265, blueWarm = 265;
     private final int redCold = 153, greenCold = 190, blueCold = 255;
-
+    private String username, sha256username;
     private ImageView setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Bundle extras = getIntent().getExtras();
+
+        if(extras == null) {
+            username = null;
+            sha256username = null;
+        } else {
+            username= extras.getString("username");
+            sha256username= extras.getString("sha256username");
+        }
 
         update();
 
@@ -78,12 +92,15 @@ public class HomeActivity extends AppCompatActivity {
             lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", null));
             Log.d("upper: ", String.valueOf(upperInt));
             Log.d("lower: ", String.valueOf(lowerInt));
+
         }catch (Exception e){
             upperInt = 100;
             lowerInt = 0;
+
+            Log.d(TAG, "First time login to this app");
+
+            qrCodeScan();
         }
-
-
 
         //Textview
         target_temperature = findViewById(R.id.target_temperature);
@@ -107,7 +124,15 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(@Nullable CircularSeekBar circularSeekBar, float v, boolean b){
                 if(lowerInt > upperInt){
+                    // if lowerInt > upperInt, user need to change the setting
                     Toast.makeText(HomeActivity.this, "lowerInt > upperInt, Please check you setting page", Toast.LENGTH_SHORT).show();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Log.d(TAG, "Error when trying to sleep");
+                    }
+                    Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
+                    startActivity(i);
                 }else{
 //                    Log.d(TAG, "Progress: " + seekbar.getProgress());
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
@@ -126,16 +151,10 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStopTrackingTouch(@Nullable CircularSeekBar circularSeekBar) {
-                String desired_temp = target_temperature.getText().toString();
-                Log.d(TAG, "desired_temp: " + desired_temp);
-                //TODO: Store this target somewhere
-            }
+            public void onStopTrackingTouch(@Nullable CircularSeekBar circularSeekBar) {}
 
             @Override
-            public void onStartTrackingTouch(@Nullable CircularSeekBar circularSeekBar){
-                //TODO: Store desired_temp before for reset purpose
-            }
+            public void onStartTrackingTouch(@Nullable CircularSeekBar circularSeekBar){}
         });
 
         history.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +303,7 @@ public class HomeActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         update();
+        Log.d(TAG, "onResume Called");
         try{
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", ""));
@@ -294,8 +314,42 @@ public class HomeActivity extends AppCompatActivity {
             //first time open
             upperInt = 100;
             lowerInt = 0;
+            Log.d(TAG, "First time login to this app");
         }
 
+    }
+
+    private void qrCodeScan(){
+        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+        intentIntegrator.setPrompt("Scan a barcode or QR Code");
+        intentIntegrator.setOrientationLocked(true);
+        intentIntegrator.initiateScan();
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        // if the intentResult is null then
+        // toast a message as "cancelled"
+        Log.d(TAG, "b------------------------------------------------------------------b");
+        if (intentResult != null) {
+
+            if (intentResult.getContents() == null) {
+                Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+            }else {
+                // if the intentResult is not null we'll set
+                // the content and format of scan message
+                String id = intentResult.getContents();
+                Log.d(TAG, id);
+                Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
+                i.putExtra("id", id);
+                startActivity(i);
+            }
+
+        } else {
+            Log.d(TAG, "NULL");
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }
