@@ -30,8 +30,9 @@ public class HistoryActivity extends AppCompatActivity{
     private final int Temp = 1, Hum = 2;
     private final String TAG = "HistoryActivity";
 //    public final String VM_public_ip = getString(R.string.ipAddress);
-    public final String VM_public_ip = "http://3.96.148.29:8000/";
-    BarChart chartTemp, chartHum;
+    public final String VM_public_ip = "http://15.222.248.41:8000/";
+
+BarChart chartTemp, chartHum;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -40,41 +41,41 @@ public class HistoryActivity extends AppCompatActivity{
         chartTemp = findViewById(R.id.barcharttemp);
         chartHum = findViewById(R.id.barcharthum);
 
-        JSONObject test= new JSONObject();
-        JSONArray tempReading = new JSONArray();
-        tempReading.put(10);
-        tempReading.put(11);
-        tempReading.put(12);
-        tempReading.put(13);
-        tempReading.put(14);
-        tempReading.put(15);
-        tempReading.put(16);
-        tempReading.put(17);
-        tempReading.put(18);
-        tempReading.put(19);
+//        JSONObject test= new JSONObject();
+//        JSONArray tempReading = new JSONArray();
+//        tempReading.put(10);
+//        tempReading.put(11);
+//        tempReading.put(12);
+//        tempReading.put(13);
+//        tempReading.put(14);
+//        tempReading.put(15);
+//        tempReading.put(16);
+//        tempReading.put(17);
+//        tempReading.put(18);
+//        tempReading.put(19);
+//
+//        JSONArray readings = new JSONArray();
+//        readings.put(10);
+//        readings.put(11);
+//        readings.put(12);
+//        readings.put(13);
+//        readings.put(14);
+//        readings.put(15);
+//        readings.put(16);
+//        readings.put(17);
+//        readings.put(18);
+//        readings.put(19);
+//        try {
+//            test.put("temperature_history", tempReading);
+//            test.put("humidity_history", readings);
+//
+//        } catch (JSONException e) {
+//            throw new RuntimeException(e);
+//        }
+//        updateChart(test, Hum);
+//        updateChart(test, Temp);
 
-        JSONArray readings = new JSONArray();
-        readings.put(10);
-        readings.put(11);
-        readings.put(12);
-        readings.put(13);
-        readings.put(14);
-        readings.put(15);
-        readings.put(16);
-        readings.put(17);
-        readings.put(18);
-        readings.put(19);
-        try {
-            test.put("temperature_history", tempReading);
-            test.put("humidity_history", readings);
-
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        updateChart(test, Hum);
-        updateChart(test, Temp);
-
-//        getHistory();
+        getHistory();
     }
 
     private void getHistory(){

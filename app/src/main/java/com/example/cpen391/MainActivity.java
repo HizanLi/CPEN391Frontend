@@ -29,17 +29,18 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 //    public final String VM_public_ip = getString(R.string.ipAddress);
-    public final String VM_public_ip = "http://3.96.148.29:8000/";
+
+    public final String VM_public_ip = "http://15.222.248.41:8000/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //for testing
-        Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(MainActivity.this, HomeActivity.class);
-        startActivity(i);
-        //for testing
+//        //for testing
+//        Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
+//        Intent i = new Intent(MainActivity.this, HomeActivity.class);
+//        startActivity(i);
+//        //for testing
 
         TextView usernameTV =(TextView) findViewById(R.id.email);
         TextView passwordTV =(TextView) findViewById(R.id.password);
@@ -49,14 +50,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // on below line we are getting data from our edit text.
-                String userName = usernameTV.getText().toString();
-                String password = passwordTV.getText().toString();
-                Toast.makeText(MainActivity.this, "Send", Toast.LENGTH_SHORT).show();
+                String userName = usernameTV.getText().toString().trim();
+                String password = passwordTV.getText().toString().trim();
 
                 // checking if the entered text is empty or not.
-                if (TextUtils.isEmpty(userName) && TextUtils.isEmpty(password)) {
-                    Toast.makeText(MainActivity.this, "Please enter user name and password", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(password)) {
+                    Toast.makeText(MainActivity.this, "Please enter user name or password", Toast.LENGTH_SHORT).show();
                 }else{
+                    Toast.makeText(MainActivity.this, "Send", Toast.LENGTH_SHORT).show();
                     login(getSha256Hash(userName.trim()), getSha256Hash(password.trim()));
                 }
             }
