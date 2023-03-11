@@ -24,6 +24,8 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //Login page
 public class MainActivity extends AppCompatActivity {
@@ -55,10 +57,16 @@ public class MainActivity extends AppCompatActivity {
 
                 // checking if the entered text is empty or not.
                 if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(password)) {
-                    Toast.makeText(MainActivity.this, "Please enter user name or password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please enter email or password", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(MainActivity.this, "Send", Toast.LENGTH_SHORT).show();
-                    login(getSha256Hash(userName.trim()), getSha256Hash(password.trim()));
+                    String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+                    Pattern pattern = Pattern.compile(emailRegex);
+                    Matcher matcher = pattern.matcher(userName.trim());
+                    if(matcher.matches()){
+                        login(getSha256Hash(userName.trim()), getSha256Hash(password.trim()));
+                    }else{
+                        Toast.makeText(MainActivity.this, "Please enter you email", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

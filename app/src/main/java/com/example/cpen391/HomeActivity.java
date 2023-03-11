@@ -2,7 +2,9 @@ package com.example.cpen391;
 
 import static android.app.PendingIntent.getActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -128,19 +130,7 @@ public class HomeActivity extends AppCompatActivity {
         seekbar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(@Nullable CircularSeekBar circularSeekBar, float v, boolean b){
-                if(lowerInt > upperInt){
-                    // if lowerInt > upperInt, user need to change the setting
-                    Toast.makeText(HomeActivity.this, "lowerInt > upperInt, Please check you setting page", Toast.LENGTH_SHORT).show();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        Log.d(TAG, "Error when trying to sleep");
-                    }
-
-                    Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
-                    startActivity(i);
-                }else{
-//                    Log.d(TAG, "Progress: " + seekbar.getProgress());
+                if(lowerInt < upperInt){
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
                     int intTemp = (int)currentTemp;
 
@@ -153,15 +143,22 @@ public class HomeActivity extends AppCompatActivity {
                         }else {
                             back.setBackgroundColor(Color.rgb(redCold + intTemp, greenCold + intTemp, blueCold ));
                         }
-                    }else{
-                        Toast.makeText(HomeActivity.this, "Not in desired range", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onStopTrackingTouch(@Nullable CircularSeekBar circularSeekBar) {
-                //TODO: update desiredTemp
+                if( lowerInt > upperInt){
+                    alert("Alert", "lowerInt > upperInt, jump to setting?");
+                }else{
+                    float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
+                    int intTemp = (int)currentTemp;
+                    if(! (lowerInt <= intTemp && intTemp <= upperInt)){
+                        Toast.makeText(HomeActivity.this, "Not in desired range", Toast.LENGTH_SHORT).show();
+                        alert("Jump", "lowerInt > upperInt, jump to setting?");
+                    }
+                }
             }
 
             @Override
@@ -259,6 +256,7 @@ public class HomeActivity extends AppCompatActivity {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 update();
             }
         });
@@ -271,6 +269,26 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    private void alert(String title, String content){
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setTitle(title);
+        builder.setMessage(content);
+        builder.setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
+                startActivity(i);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+        builder.show();
     }
     private void update(){
         HashMap<String, String> data = new HashMap<>();
@@ -302,9 +320,9 @@ public class HomeActivity extends AppCompatActivity {
                             desiredTemp = Integer.toString(response.getInt("desire_temp"));
                             //on or off
                             int ONOFF = response.getInt("status");
-                            chumidity.setText("" + chum);
-                            ctemperature.setText("" + ctemp);
-                            target_temperature.setText("" + desiredTemp);
+                            chumidity.setText(Integer.toString(chum) + "%");
+                            ctemperature.setText(Integer.toString(ctemp) + "C");
+                            target_temperature.setText(desiredTemp + "C");
 
                             if(ONOFF == 1){
                                 power.setText("Power ON");

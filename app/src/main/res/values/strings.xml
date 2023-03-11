@@ -23,4 +23,7 @@
     <string name="temp_header">Temperature</string>
     <string name="limitation_title">Limitation</string>
     <string name="accont_header">Account</string>
+    <string name="start">Start</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_setting_game">Navigate to Settings?</string>
 </resources>
