@@ -176,20 +176,30 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/remainder_layout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible">
 
         <TextView
-            android:id="@+id/tips"
+            android:id="@+id/remainder_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="Tips:"
+            android:text="Reminder: "
+            android:textColor="#0F52BA"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/remainder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Click submit to upload your changes \nClick reset to erase your changes "
             android:textColor="#0F52BA"
             android:textSize="20dp"
             android:textStyle="bold" />

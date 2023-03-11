@@ -116,10 +116,18 @@ BarChart chartTemp, chartHum;
             }else{
                 readingJSONArray = data.getJSONArray("humidity_history");
             }
+            int arrayLength = readingJSONArray.length();
 
-            for(int i = 0; i < 10; i ++){
-                readingBarEntry.add(new BarEntry(i, readingJSONArray.getInt(i)));
+            if(arrayLength >= 10){
+                for(int i = 0; i < 10; i ++){
+                    readingBarEntry.add(new BarEntry(i, readingJSONArray.getInt(i)));
+                }
+            }else {
+                for(int i = 0; i < arrayLength; i ++){
+                    readingBarEntry.add(new BarEntry(i, readingJSONArray.getInt(i)));
+                }
             }
+
 
             chartHum.animateY(10);
             chartTemp.animateY(10);
