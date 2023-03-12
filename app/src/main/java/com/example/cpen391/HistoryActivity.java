@@ -30,58 +30,32 @@ public class HistoryActivity extends AppCompatActivity{
     private final int Temp = 1, Hum = 2;
     private final String TAG = "HistoryActivity";
 //    public final String VM_public_ip = getString(R.string.ipAddress);
-    public final String VM_public_ip = "http://15.222.248.41:8000/";
+    public static String VM_public_ip;
 
+    private static String sha256username, deviceID;
 BarChart chartTemp, chartHum;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        VM_public_ip = getString(R.string.ipAddress);
+
         chartTemp = findViewById(R.id.barcharttemp);
         chartHum = findViewById(R.id.barcharthum);
 
-//        JSONObject test= new JSONObject();
-//        JSONArray tempReading = new JSONArray();
-//        tempReading.put(10);
-//        tempReading.put(11);
-//        tempReading.put(12);
-//        tempReading.put(13);
-//        tempReading.put(14);
-//        tempReading.put(15);
-//        tempReading.put(16);
-//        tempReading.put(17);
-//        tempReading.put(18);
-//        tempReading.put(19);
-//
-//        JSONArray readings = new JSONArray();
-//        readings.put(10);
-//        readings.put(11);
-//        readings.put(12);
-//        readings.put(13);
-//        readings.put(14);
-//        readings.put(15);
-//        readings.put(16);
-//        readings.put(17);
-//        readings.put(18);
-//        readings.put(19);
-//        try {
-//            test.put("temperature_history", tempReading);
-//            test.put("humidity_history", readings);
-//
-//        } catch (JSONException e) {
-//            throw new RuntimeException(e);
-//        }
-//        updateChart(test, Hum);
-//        updateChart(test, Temp);
+        Bundle extras = getIntent().getExtras();
+
+        deviceID= extras.getString("deviceID");
+        sha256username= extras.getString("sha256username");
 
         getHistory();
     }
 
     private void getHistory(){
         HashMap<String, String> data = new HashMap<>();
-        data.put("username", "SHA256_username");
-        data.put("deviceId", "deviceId");
+        data.put("username", sha256username);
+        data.put("deviceId", deviceID);
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.start();
 
@@ -89,8 +63,8 @@ BarChart chartTemp, chartHum;
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "response.toString()");
-                        Log.d(TAG, response.toString());
+//                        Log.d(TAG, "response.toString()");
+//                        Log.d(TAG, response.toString());
                         updateChart(response, Temp);
                         updateChart(response, Hum);
                     }

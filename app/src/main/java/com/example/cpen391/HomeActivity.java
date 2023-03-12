@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
 
 //    public final String VM_public_ip = getString(R.string.ipAddress);
 
-    public final String VM_public_ip = "http://15.222.248.41:8000/";
+    public static String VM_public_ip;
 
     private final int maxTemp = 100, minTemp = 0;
 
@@ -64,6 +64,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        VM_public_ip = getString(R.string.ipAddress);
 
         Bundle extras = getIntent().getExtras();
 
@@ -152,6 +154,10 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(HomeActivity.this,"View History", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(HomeActivity.this, HistoryActivity.class);
+                Log.d(TAG, "deviceID: " + deviceID);
+                i.putExtra("deviceID", deviceID);
+                i.putExtra("sha256username", sha256username);
+
                 startActivity(i);
             }
         });
@@ -171,31 +177,6 @@ public class HomeActivity extends AppCompatActivity {
                     power.setText("Power ON");
                     status = "ON";
                 }
-//                data.put("username", sha256username);
-//                data.put("device_id", deviceID);
-//                data.put("desire_temp", desiredTemp);
-//                data.put("status", status);
-//
-//                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-//                queue.start();
-//
-//                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "setTemp", new JSONObject(data),
-//                        new Response.Listener<JSONObject>() {
-//                            @Override
-//                            public void onResponse(JSONObject response) {
-//                                Log.d(TAG, "response.toString()");
-//                                Log.d(TAG, response.toString());
-//                                Toast.makeText(HomeActivity.this,"Server Received", Toast.LENGTH_SHORT).show();
-//                            }
-//                        },
-//                        new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                                Toast.makeText(HomeActivity.this,"Network Error", Toast.LENGTH_SHORT).show();
-//                                Log.d(TAG, "onErrorResponse " + error.getMessage());
-//                            }
-//                        });
-//                queue.add(request);
             }
         });
 
@@ -225,7 +206,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
+        updateTV(26);
         update(2);
     }
 
@@ -257,6 +238,7 @@ public class HomeActivity extends AppCompatActivity {
         data.put("username", sha256username);
         data.put("device_id", deviceID);
         data.put("desire_temp", desiredTemp);
+
         if(status == null){
             status = "ON";
         }
@@ -286,6 +268,7 @@ public class HomeActivity extends AppCompatActivity {
                             //current
                             int ctemp = response.getInt("current_temp");
                             int chum = response.getInt("current_hum");
+
                             int ONOFF = response.getInt("status");
                             int dtemp = response.getInt("desire_temp");
 
@@ -295,9 +278,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
                             if (mode == 2) {
-                                desiredTemp = Integer.toString(dtemp);
-
-                                target_temperature.setText(desiredTemp + "C");
+//                                desiredTemp = Integer.toString(dtemp);
+//                                target_temperature.setText(desiredTemp + "C");
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
                                 seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
                                 updateTV(dtemp);

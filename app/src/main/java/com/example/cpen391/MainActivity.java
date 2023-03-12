@@ -32,11 +32,13 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 //    public final String VM_public_ip = getString(R.string.ipAddress);
 
-    public final String VM_public_ip = "http://15.222.248.41:8000/";
+    public static String VM_public_ip;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        VM_public_ip = getString(R.string.ipAddress);
 
 //        //for testing
 //        Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
