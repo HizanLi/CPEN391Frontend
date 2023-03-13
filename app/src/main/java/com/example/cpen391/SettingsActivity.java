@@ -47,29 +47,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
     }
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-//        // if the intentResult is null then
-//        // toast a message as "cancelled"
-//        Log.d(TAG, "a------------------------------------------------------------------s");
-//        if (intentResult != null) {
-//            if (intentResult.getContents() == null) {
-//                Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
-//                Log.d(TAG, "unsuccess");
-//            } else {
-//                // if the intentResult is not null we'll set
-//                // the content and format of scan message
-//                Log.d(TAG, "success");
-//                String id = intentResult.getContents();
-//                Log.d(TAG, id);
-//
-//            }
-//        } else {
-//            super.onActivityResult(requestCode, resultCode, data);
-//        }
-//    }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private final String TAG = "SettingsFragment";
