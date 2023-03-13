@@ -21,7 +21,6 @@ public class QRcodeActivity extends AppCompatActivity {
 
         IntentIntegrator intentIntegrator = new IntentIntegrator(this);
         intentIntegrator.setPrompt("Scan a barcode or QR Code");
-        intentIntegrator.setOrientationLocked(true);
         intentIntegrator.initiateScan();
     }
 
@@ -31,7 +30,6 @@ public class QRcodeActivity extends AppCompatActivity {
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         // if the intentResult is null then
         // toast a message as "cancelled"
-        Log.d(TAG, "a------------------------------------------------------------------s");
         if (intentResult != null) {
             if (intentResult.getContents() == null) {
                 Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();

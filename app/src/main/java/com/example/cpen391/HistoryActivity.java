@@ -59,7 +59,7 @@ BarChart chartTemp, chartHum;
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.start();
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "history", new JSONObject(data),
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "history_sw", new JSONObject(data),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

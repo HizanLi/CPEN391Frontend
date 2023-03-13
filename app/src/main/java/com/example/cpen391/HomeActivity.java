@@ -90,8 +90,6 @@ public class HomeActivity extends AppCompatActivity {
             deviceID = "None";
             desiredTemp = "26";
             status = "ON";
-
-            Log.d(TAG, "First time login to this app");
         }
 
         //Textview
@@ -121,8 +119,6 @@ public class HomeActivity extends AppCompatActivity {
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
                     int intTemp = (int)currentTemp;
 
-                    desiredTemp = Integer.toString(intTemp);
-
                     updateTV(intTemp);
                 }
             }
@@ -133,14 +129,18 @@ public class HomeActivity extends AppCompatActivity {
                 if( lowerInt > upperInt){
                     alert("Alert", "lowerInt > upperInt, jump to setting?");
                 }else{
-
+                    //TODO: desire_temp
                     reminder.setVisibility(View.VISIBLE);
 
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
                     int intTemp = (int)currentTemp;
+
+
                     if(! (lowerInt <= intTemp && intTemp <= upperInt)){
                         Toast.makeText(HomeActivity.this, "Not in desired range", Toast.LENGTH_SHORT).show();
                         alert("Jump", "Not in desired Range, jump to setting?");
+                    }else{
+                        updateTV(intTemp);
                     }
                 }
             }
@@ -184,7 +184,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 reminder.setVisibility(View.INVISIBLE);
-
+                desiredTemp = target_temperature.getText().toString().substring(0,2);
                 update(1);
             }
         });
@@ -207,6 +207,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         updateTV(26);
+
         update(2);
     }
 
@@ -233,6 +234,12 @@ public class HomeActivity extends AppCompatActivity {
         int mode: 1 is submit, 2 is reset
      */
     private void update(int mode){
+
+        if(deviceID.equalsIgnoreCase("None")){
+            alert("Setting", "Please Update Your Device Id");
+            return;
+        }
+
         HashMap<String, String> data = new HashMap<>();
 
         data.put("username", sha256username);
@@ -242,6 +249,8 @@ public class HomeActivity extends AppCompatActivity {
         if(status == null){
             status = "ON";
         }
+
+
         data.put("status", status);
 
 
@@ -310,6 +319,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void updateTV(int intTemp){
         if(lowerInt <= intTemp && intTemp <= upperInt){
+            desiredTemp = Integer.toString(intTemp);
             target_temperature.setText(intTemp + "C");
             if(intTemp > thresholdTemp){
                 background.setBackgroundColor(Color.rgb(redWarm, greenWarm - 2 * intTemp, blueWarm - 2 * intTemp));
@@ -339,6 +349,7 @@ public class HomeActivity extends AppCompatActivity {
 
             deviceID = "None";
             desiredTemp = "26";
+            updateTV(26);
             status = "ON";
 
             Intent i = new Intent(HomeActivity.this, SettingsActivity.class);

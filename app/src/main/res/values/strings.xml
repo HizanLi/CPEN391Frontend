@@ -14,8 +14,8 @@
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
 
-    <string name="ipAddress">http://44.235.47.205:8000/</string>
-<!--    <string name="ipAddress">http://3.96.206.29:8000/</string>-->
+<!--    <string name="ipAddress">http://44.235.47.205:8000/</string>-->
+    <string name="ipAddress">http://3.96.206.29:8000/</string>
 
     <string name="limitation_summary_on">Able to set temperature in all range
     </string>
