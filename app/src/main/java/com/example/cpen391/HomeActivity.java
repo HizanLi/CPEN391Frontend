@@ -112,6 +112,10 @@ public class HomeActivity extends AppCompatActivity {
 
         seekbar = findViewById(R.id.seek_bar);
 
+//        seekbar.setCircleColor(Color.rgb(245, 245, 245));
+//        seekbar.setCircleFillColor(Color.rgb(245, 245, 245));
+        seekbar.setCircleProgressColor(Color.rgb(232, 0, 0));
+//        seekbar.setCircleColor(Color.rgb(245, 245, 245));
         seekbar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(@Nullable CircularSeekBar circularSeekBar, float v, boolean b){
@@ -119,7 +123,7 @@ public class HomeActivity extends AppCompatActivity {
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
                     int intTemp = (int)currentTemp;
 
-                    updateTV(intTemp);
+                    updateBack(intTemp);
                 }
             }
 
@@ -140,7 +144,7 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(HomeActivity.this, "Not in desired range", Toast.LENGTH_SHORT).show();
                         alert("Jump", "Not in desired Range, jump to setting?");
                     }else{
-                        updateTV(intTemp);
+                        updateBack(intTemp);
                     }
                 }
             }
@@ -206,7 +210,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        updateTV(26);
+        updateBack(26);
 
         update(2);
     }
@@ -291,7 +295,7 @@ public class HomeActivity extends AppCompatActivity {
 //                                target_temperature.setText(desiredTemp + "C");
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
                                 seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
-                                updateTV(dtemp);
+                                updateBack(dtemp);
 
                                 if (ONOFF == 1) {
                                     power.setText("Power ON");
@@ -316,14 +320,41 @@ public class HomeActivity extends AppCompatActivity {
                 });
         queue.add(request);
     }
+    private void updateTVs(int colorRGB){
+        TextView ctt = findViewById(id.ctemperature_title);
+        ctt.setTextColor(colorRGB);
 
-    private void updateTV(int intTemp){
+        TextView ct = findViewById(id.ctemperature);
+        ct.setTextColor(colorRGB);
+
+        TextView cht = findViewById(id.chumidity_title);
+        cht.setTextColor(colorRGB);
+
+        TextView ch = findViewById(id.chumidity);
+        ch.setTextColor(colorRGB);
+
+        TextView tt = findViewById(id.target_temperature);
+        tt.setTextColor(colorRGB);
+
+        TextView ttt = findViewById(id.temperature_title);
+        ttt.setTextColor(colorRGB);
+
+        power.setBackgroundColor(colorRGB);
+        reset.setBackgroundColor(colorRGB);
+        submit.setBackgroundColor(colorRGB);
+        history.setBackgroundColor(colorRGB);
+
+    }
+    private void updateBack(int intTemp){
         if(lowerInt <= intTemp && intTemp <= upperInt){
             desiredTemp = Integer.toString(intTemp);
             target_temperature.setText(intTemp + "C");
+
             if(intTemp > thresholdTemp){
-                background.setBackgroundColor(Color.rgb(redWarm, greenWarm - 2 * intTemp, blueWarm - 2 * intTemp));
+                updateTVs(Color.rgb(227,38,54));
+                background.setBackgroundColor(Color.rgb(redWarm, greenWarm -  intTemp, blueWarm - intTemp));
             }else {
+                updateTVs(Color.rgb(15,82,186));
                 background.setBackgroundColor(Color.rgb(redCold + intTemp, greenCold + intTemp, blueCold ));
             }
         }
@@ -349,7 +380,7 @@ public class HomeActivity extends AppCompatActivity {
 
             deviceID = "None";
             desiredTemp = "26";
-            updateTV(26);
+            updateBack(26);
             status = "ON";
 
             Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
