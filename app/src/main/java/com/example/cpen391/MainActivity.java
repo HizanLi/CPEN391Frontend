@@ -40,14 +40,17 @@ public class MainActivity extends AppCompatActivity {
 
         VM_public_ip = getString(R.string.ipAddress);
 
-        //for testing
-
-        Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(MainActivity.this, HomeActivity.class);
-        i.putExtra("username", "asdasdasd");
-        i.putExtra("sha256username", "asdsadsad");
-        startActivity(i);
-        //for testing
+//        for(int i = 0; i < 8; i ++){
+//            testUplod(i+3, i+6);
+//        }
+//        //for testing
+//
+//        Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
+//        Intent i = new Intent(MainActivity.this, HomeActivity.class);
+//        i.putExtra("username", "asdasdasd");
+//        i.putExtra("sha256username", "asdsadsad");
+//        startActivity(i);
+//        //for testing
 
         TextView usernameTV =(TextView) findViewById(R.id.email);
         TextView passwordTV =(TextView) findViewById(R.id.password);
@@ -143,6 +146,34 @@ public class MainActivity extends AppCompatActivity {
         queue.start();
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "resetPassword", new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "response.toString()");
+                        Log.d(TAG, response.toString());
+                        Toast.makeText(MainActivity.this,"New Password Will be send to your email.",Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this,"Network Error", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onErrorResponse " + error.getMessage());
+                    }
+                });
+        queue.add(request);
+    }
+
+    private void testUplod(int temp, int hum){
+        HashMap<String, String> params = new HashMap<String, String>();
+
+        params.put("device_id", "woasobfasd");
+        params.put("temperature", Integer.toString(temp));
+        params.put("humidity",  Integer.toString(hum));
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        queue.start();
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "history_hw", new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

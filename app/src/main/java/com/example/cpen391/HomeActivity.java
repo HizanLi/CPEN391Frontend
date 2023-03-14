@@ -89,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
 
             deviceID = "None";
             desiredTemp = "26";
-            status = "ON";
+            status = "1";
         }
 
         //Textview
@@ -176,10 +176,10 @@ public class HomeActivity extends AppCompatActivity {
 
                 if(statusLo.equalsIgnoreCase("Power ON")){
                     power.setText("Power OFF");
-                    status = "OFF";
+                    status = "0";
                 }else{
                     power.setText("Power ON");
-                    status = "ON";
+                    status = "1";
                 }
             }
         });
@@ -251,14 +251,13 @@ public class HomeActivity extends AppCompatActivity {
         data.put("desire_temp", desiredTemp);
 
         if(status == null){
-            status = "ON";
+            status = "1";
         }
-
 
         data.put("status", status);
 
 
-        Log.d(TAG, "In update");
+        Log.d(TAG, "In update mode: " + mode);
         Log.d(TAG, data.toString());
 
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
@@ -266,7 +265,7 @@ public class HomeActivity extends AppCompatActivity {
         String target;
 
         if(mode == 1){// submit
-            target = VM_public_ip + "setTemp";
+            target = VM_public_ip + "setTemp_sw";
         }else {// reset
             target = VM_public_ip + "recent";
 
@@ -278,19 +277,22 @@ public class HomeActivity extends AppCompatActivity {
                         Log.d(TAG, "response.toString()");
                         Log.d(TAG, response.toString());
                         try {//TODO: check connection with sever
-                            //current
-                            int ctemp = response.getInt("current_temp");
-                            int chum = response.getInt("current_hum");
 
-                            int ONOFF = response.getInt("status");
-                            int dtemp = response.getInt("desire_temp");
+                            if(mode == 1){
+                                int result = response.getInt("result");
+                                Log.d(TAG, "result: "+ result);
+                            } else if (mode == 2) {
 
-                            //on or off
-                            chumidity.setText(Integer.toString(chum) + "%");
-                            ctemperature.setText(Integer.toString(ctemp) + "C");
+                                //current
+                                int ctemp = response.getInt("current_temp");
+                                int chum = response.getInt("current_hum");
 
+                                int ONOFF = response.getInt("status");
+                                int dtemp = response.getInt("desire_temp");
 
-                            if (mode == 2) {
+                                //on or off
+                                chumidity.setText(Integer.toString(chum) + "%");
+                                ctemperature.setText(Integer.toString(ctemp) + "C");
 //                                desiredTemp = Integer.toString(dtemp);
 //                                target_temperature.setText(desiredTemp + "C");
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
@@ -299,10 +301,10 @@ public class HomeActivity extends AppCompatActivity {
 
                                 if (ONOFF == 1) {
                                     power.setText("Power ON");
-                                    status = "ON";
+                                    status = "1";
                                 } else {
                                     power.setText("Power OFF");
-                                    status = "OFF";
+                                    status = "0";
                                 }
                             }
 
@@ -381,7 +383,7 @@ public class HomeActivity extends AppCompatActivity {
             deviceID = "None";
             desiredTemp = "26";
             updateBack(26);
-            status = "ON";
+            status = "1";
 
             Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
             startActivity(i);

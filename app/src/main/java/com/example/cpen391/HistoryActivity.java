@@ -55,10 +55,11 @@ BarChart chartTemp, chartHum;
     private void getHistory(){
         HashMap<String, String> data = new HashMap<>();
         data.put("username", sha256username);
-        data.put("deviceId", deviceID);
+        data.put("device_id", deviceID);
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.start();
 
+        Log.d(TAG, data.toString());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, VM_public_ip + "history_sw", new JSONObject(data),
                 new Response.Listener<JSONObject>() {
                     @Override
