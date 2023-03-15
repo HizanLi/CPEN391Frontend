@@ -60,6 +60,8 @@ public class HomeActivity extends AppCompatActivity {
     private ConstraintLayout background;
     private LinearLayout reminder;
 
+    private int backgroundColor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +74,7 @@ public class HomeActivity extends AppCompatActivity {
         username= extras.getString("username");
         sha256username= extras.getString("sha256username");
 
+        backgroundColor = Color.rgb(0,0,0);
 //        Setting
         try{
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -158,10 +161,10 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(HomeActivity.this,"View History", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(HomeActivity.this, HistoryActivity.class);
-                Log.d(TAG, "deviceID: " + deviceID);
                 i.putExtra("deviceID", deviceID);
                 i.putExtra("sha256username", sha256username);
-
+                i.putExtra("backgroundColor", backgroundColor);
+                i.putExtra("desiredTemp", Integer.parseInt(desiredTemp));
                 startActivity(i);
             }
         });
@@ -207,6 +210,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(HomeActivity.this,"Update Settings", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
+                i.putExtra("backgroundColor", backgroundColor);
                 startActivity(i);
             }
         });
@@ -223,6 +227,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
+                i.putExtra("backgroundColor", backgroundColor);
                 startActivity(i);
             }
         });
@@ -351,13 +356,14 @@ public class HomeActivity extends AppCompatActivity {
         if(lowerInt <= intTemp && intTemp <= upperInt){
             desiredTemp = Integer.toString(intTemp);
             target_temperature.setText(intTemp + "C");
-
             if(intTemp > thresholdTemp){
                 updateTVs(Color.rgb(227,38,54));
-                background.setBackgroundColor(Color.rgb(redWarm, greenWarm -  intTemp, blueWarm - intTemp));
+                backgroundColor = Color.rgb(redWarm, greenWarm -  intTemp, blueWarm - intTemp);
+                background.setBackgroundColor(backgroundColor);
             }else {
                 updateTVs(Color.rgb(15,82,186));
-                background.setBackgroundColor(Color.rgb(redCold + intTemp, greenCold + intTemp, blueCold ));
+                backgroundColor = Color.rgb(redCold + intTemp, greenCold + intTemp, blueCold);
+                background.setBackgroundColor(backgroundColor);
             }
         }
     }
@@ -386,6 +392,7 @@ public class HomeActivity extends AppCompatActivity {
             status = "1";
 
             Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
+            i.putExtra("backgroundColor", backgroundColor);
             startActivity(i);
         }
     }

@@ -89,16 +89,19 @@
 
 
         <ImageView
+            android:id="@+id/google_signin"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="20dp"
             android:src="@drawable/google"/>
         <ImageView
+            android:id="@+id/facebook_signin"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="20dp"
             android:src="@drawable/fb"/>
         <ImageView
+            android:id="@+id/twitter_signin"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="20dp"

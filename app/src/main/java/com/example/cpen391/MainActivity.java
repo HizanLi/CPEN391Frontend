@@ -43,14 +43,16 @@ public class MainActivity extends AppCompatActivity {
 //        for(int i = 0; i < 8; i ++){
 //            testUplod(i+3, i+6);
 //        }
-//        //for testing
-//
-//        Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
-//        Intent i = new Intent(MainActivity.this, HomeActivity.class);
-//        i.putExtra("username", "asdasdasd");
-//        i.putExtra("sha256username", "asdsadsad");
-//        startActivity(i);
-//        //for testing
+
+        //for testing
+
+        Toast.makeText(MainActivity.this,"LOGIN SUCCESSFUL",Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(MainActivity.this,HistoryActivity.class);
+        i.putExtra("username", "asdasdasd");
+        i.putExtra("sha256username", "asdsadsad");
+        i.putExtra("desiredTemp", 100);
+        startActivity(i);
+        //for testing
 
         TextView usernameTV =(TextView) findViewById(R.id.email);
         TextView passwordTV =(TextView) findViewById(R.id.password);
@@ -167,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     private void testUplod(int temp, int hum){
         HashMap<String, String> params = new HashMap<String, String>();
 
-        params.put("device_id", "woasobfasd");
+        params.put("device_id", "1");
         params.put("temperature", Integer.toString(temp));
         params.put("humidity",  Integer.toString(hum));
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
