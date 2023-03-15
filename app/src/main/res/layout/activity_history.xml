@@ -8,26 +8,7 @@
     tools:context=".HistoryActivity">
 
     <TextView
-        android:id="@+id/temperature_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="History Temperature Readings:"
-        android:textStyle="bold"
-        android:layout_margin="5dp"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barcharttemp"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temperature_title">
-    </com.github.mikephil.charting.charts.BarChart>
-
-    <TextView
-        android:id="@+id/humidity_title"
+        android:id="@+id/hum_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="History Humidity Readings:"
@@ -35,14 +16,33 @@
         android:layout_margin="5dp"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barcharttemp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barcharthum"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/humidity_title">
+        app:layout_constraintTop_toBottomOf="@+id/hum_title">
+    </com.github.mikephil.charting.charts.BarChart>
+
+    <TextView
+        android:id="@+id/temp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="History Temperature Readings:"
+        android:textStyle="bold"
+        android:layout_margin="5dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barcharthum" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barcharttemp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temp_title">
 
     </com.github.mikephil.charting.charts.BarChart>
 
@@ -55,7 +55,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barcharthum"/>
+        app:layout_constraintTop_toBottomOf="@+id/barcharttemp"/>
 
     <TextView
         android:id="@+id/analysis_content"

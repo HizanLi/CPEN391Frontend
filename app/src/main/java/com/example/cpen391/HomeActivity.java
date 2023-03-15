@@ -343,7 +343,7 @@ public class HomeActivity extends AppCompatActivity {
         TextView tt = findViewById(id.target_temperature);
         tt.setTextColor(colorRGB);
 
-        TextView ttt = findViewById(id.temperature_title);
+        TextView ttt = findViewById(id.hum_title);
         ttt.setTextColor(colorRGB);
 
         power.setBackgroundColor(colorRGB);

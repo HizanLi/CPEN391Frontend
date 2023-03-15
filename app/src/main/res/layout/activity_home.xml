@@ -114,7 +114,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/temperature_title"
+            android:id="@+id/hum_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

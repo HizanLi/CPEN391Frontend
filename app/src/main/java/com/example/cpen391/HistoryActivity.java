@@ -57,14 +57,14 @@ BarChart chartTemp, chartHum;
         deviceID= extras.getString("deviceID");
         sha256username= extras.getString("sha256username");
 
-//        getHistory();
+        getHistory();
 
 
 //        ArrayList<Integer> test = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 //        dataAnalyze(test, temp);
 //
-        ArrayList<Integer> test2 = new ArrayList<>(Arrays.asList(40, 23, 41, 42, 43, 44, 45, 46, 47));
-        temperatureAnalyze(test2);
+//        ArrayList<Integer> test2 = new ArrayList<>(Arrays.asList(40, 23, 41, 42, 43, 44, 45, 46, 47));
+//        temperatureAnalyze(test2);
 
     }
 
@@ -103,6 +103,7 @@ BarChart chartTemp, chartHum;
             ArrayList<BarEntry> readingBarEntry = new ArrayList<BarEntry>();
             if(chartType == Temp){
                 readingJSONArray = data.getJSONArray("temperature_history");
+                temperatureAnalyze(readingJSONArray);
             }else{
                 readingJSONArray = data.getJSONArray("humidity_history");
             }
@@ -141,10 +142,23 @@ BarChart chartTemp, chartHum;
         }
     }
 
-    private void temperatureAnalyze(ArrayList<Integer> data){
+    private void temperatureAnalyze(JSONArray Jarray){
+
+        ArrayList<Integer> data = new ArrayList<>();
+
+
+        for(int i = 0; i < 10; i ++){
+            try {
+                data.add(Jarray.getInt(i));
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Log.d(TAG, data.toString());
+        Log.d(TAG, "desiredTemp: " + desiredTemp);
+
         int dataSize = data.size();
         int mostRecentReading = data.get(dataSize - 1);
-
         if(mostRecentReading == desiredTemp){
             updateAnalysis(0.0, 0.0);
             return;
