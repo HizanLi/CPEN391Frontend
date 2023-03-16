@@ -16,20 +16,21 @@
             android:key="qrScanner"
             android:summary="Scan the QR code on the Device" />
 
+        <ListPreference
+            android:defaultValue="OFF"
+            android:entries="@array/auto_refresh_interval"
+            android:entryValues="@array/auto_refresh_interval_value"
+            android:key="refresh_interval"
+            android:title="Self Refresh Interval"
+            app:summary="Set the frequency of pulling readings from server"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/temp_header">
 
-        <SwitchPreferenceCompat
-            app:key="limitation"
-            app:summaryOff="@string/limitation_summary_off"
-            app:summaryOn="@string/limitation_summary_on"
-            app:title="@string/limitation_title"
-            android:defaultValue="true"/>
-
         <EditTextPreference
-            android:defaultValue="50"
-            app:summary="Current Setting: 50C"
+            android:defaultValue="100"
+            app:summary="Current Setting: 100C"
             android:inputType="number"
             android:key="upperTempLimit"
             android:selectAllOnFocus="true"

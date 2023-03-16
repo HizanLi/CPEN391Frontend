@@ -1,12 +1,19 @@
 <resources>
     <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="auto_refresh_interval_value">
+        <item>999</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>60</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="auto_refresh_interval">
+        <item>OFF</item>
+        <item>05 seconds</item>
+        <item>10 seconds</item>
+        <item>20 seconds</item>
+        <item>60 seconds</item>
     </string-array>
+
 </resources>

@@ -2,7 +2,12 @@ package com.example.cpen391;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.preference.PreferenceManager;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,12 +33,12 @@ import java.util.HashMap;
 public class HistoryActivity extends AppCompatActivity{
     private final int Temp = 1, Hum = 2;
     private final String TAG = "HistoryActivity";
-//    public final String VM_public_ip = getString(R.string.ipAddress);
     public static String VM_public_ip;
-
     private static String sha256username, deviceID;
-
     private int desiredTemp;
+    private Handler handler = new Handler();
+    private Runnable runnable = null;
+    private int delay = 2000;
 
 BarChart chartTemp, chartHum;
     @Override
@@ -80,13 +85,30 @@ BarChart chartTemp, chartHum;
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        updateChart(response, Temp);
-                        updateChart(response, Hum);
+
+                        try {
+                            JSONArray tempReadings = response.getJSONArray("temperature_history");
+                            updateChart(tempReadings, Temp);
+                            temperatureAnalyze(tempReadings);
+                        } catch (JSONException e) {
+                            updateChart(new JSONArray(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), Temp);
+                            temperatureAnalyze(new JSONArray(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));
+                        }
+                        try {
+                            updateChart(response.getJSONArray("humidity_history"), Hum);
+                        } catch (JSONException e) {
+                            updateChart(new JSONArray(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), Hum);
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
+                        JSONArray ja = new JSONArray(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+                        updateChart(ja, Temp);
+                        updateChart(ja, Hum);
+                        temperatureAnalyze(new JSONArray(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));
                         Toast.makeText(HistoryActivity.this,"Network Error", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onErrorResponse " + error.getMessage());
                     }
@@ -94,19 +116,12 @@ BarChart chartTemp, chartHum;
         queue.add(request);
     }
 
-    private void updateChart(JSONObject data, int chartType){
-
+    private void updateChart(JSONArray readingJSONArray, int chartType){
         try {
-            JSONArray readingJSONArray;
             BarDataSet readingBarDataSet;
 
             ArrayList<BarEntry> readingBarEntry = new ArrayList<BarEntry>();
-            if(chartType == Temp){
-                readingJSONArray = data.getJSONArray("temperature_history");
-                temperatureAnalyze(readingJSONArray);
-            }else{
-                readingJSONArray = data.getJSONArray("humidity_history");
-            }
+
             int arrayLength = readingJSONArray.length();
 
             if(arrayLength >= 10){
@@ -235,7 +250,22 @@ BarChart chartTemp, chartHum;
         TextView analysis_content = findViewById(R.id.analysis_content);
         analysis_content.setText(result);
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        handler.postDelayed(runnable = new Runnable() {
+            public void run() {
+                handler.postDelayed(runnable, delay);
+                getHistory();
+            }
+        }, delay);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable); //stop handler when activity not visible super.onPause();
+    }
 
 }
 

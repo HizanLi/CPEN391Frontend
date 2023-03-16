@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,31 +38,24 @@ import java.util.HashMap;
 import me.tankery.lib.circularseekbar.CircularSeekBar;
 
 public class HomeActivity extends AppCompatActivity {
-
-//    public final String VM_public_ip = getString(R.string.ipAddress);
-
     public static String VM_public_ip;
-
     private final int maxTemp = 100, minTemp = 0;
-
     private final String TAG = "HomeActivity";
-
     private TextView ctemperature, chumidity, target_temperature;
     private Button power, submit, reset, history;
     CircularSeekBar seekbar;
-
     private int upperInt, lowerInt;
     private final int thresholdTemp = 30;
     private final int redWarm = 255, greenWarm = 265, blueWarm = 265;
     private final int redCold = 153, greenCold = 190, blueCold = 255;
     private static String username, sha256username, deviceID, desiredTemp, status;
     private ImageView setting;
-
     private ConstraintLayout background;
     private LinearLayout reminder;
-
     private int backgroundColor;
-
+    private Handler handler = new Handler();
+    private Runnable runnable = null;
+    private int delay = 2000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -299,6 +293,7 @@ public class HomeActivity extends AppCompatActivity {
                             if(mode == 1){
                                 int result = response.getInt("result");
                                 Log.d(TAG, "result: "+ result);
+
                             } else if (mode == 2) {
                                 //current
 
@@ -337,6 +332,7 @@ public class HomeActivity extends AppCompatActivity {
                 });
         queue.add(request);
     }
+
     private void updateTVs(int colorRGB){
         TextView ctt = findViewById(id.ctemperature_title);
         ctt.setTextColor(colorRGB);
@@ -362,6 +358,7 @@ public class HomeActivity extends AppCompatActivity {
         history.setBackgroundColor(colorRGB);
 
     }
+
     private void updateBack(int intTemp){
         if(lowerInt <= intTemp && intTemp <= upperInt){
             desiredTemp = Integer.toString(intTemp);
@@ -377,6 +374,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -405,5 +403,17 @@ public class HomeActivity extends AppCompatActivity {
             i.putExtra("backgroundColor", backgroundColor);
             startActivity(i);
         }
+        handler.postDelayed(runnable = new Runnable() {
+            public void run() {
+                handler.postDelayed(runnable, delay);
+                update(1);
+            }
+        }, delay);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable); //stop handler when activity not visible super.onPause();
     }
 }
