@@ -192,7 +192,12 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 reminder.setVisibility(View.INVISIBLE);
                 desiredTemp = target_temperature.getText().toString().substring(0,2);
-                update(1);
+                int dt = Integer.parseInt(desiredTemp);
+                if(lowerInt <= dt && dt <= upperInt){
+                    update(1);
+                }else {
+                    Toast.makeText(HomeActivity.this, "Not in desired range", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -283,21 +288,24 @@ public class HomeActivity extends AppCompatActivity {
                         Log.d(TAG, response.toString());
                         try {//TODO: check connection with sever
 
+                            int ctemp = response.getInt("current_temp");
+                            int chum = response.getInt("current_hum");
+
+                            chumidity.setText(Integer.toString(chum) + "%");
+                            ctemperature.setText(Integer.toString(ctemp) + "C");
+
                             if(mode == 1){
                                 int result = response.getInt("result");
                                 Log.d(TAG, "result: "+ result);
                             } else if (mode == 2) {
-
                                 //current
-                                int ctemp = response.getInt("current_temp");
-                                int chum = response.getInt("current_hum");
+
 
                                 int ONOFF = response.getInt("status");
                                 int dtemp = response.getInt("desire_temp");
 
                                 //on or off
-                                chumidity.setText(Integer.toString(chum) + "%");
-                                ctemperature.setText(Integer.toString(ctemp) + "C");
+
 //                                desiredTemp = Integer.toString(dtemp);
 //                                target_temperature.setText(desiredTemp + "C");
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));

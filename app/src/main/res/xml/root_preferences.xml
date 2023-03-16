@@ -9,8 +9,7 @@
             android:key="typedDeviceID"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Your Device ID"
-            app:summary="Current Device ID: None"/>
+            android:title="Your Device ID" />
 
         <Preference
             android:title="QR code Sanner"
