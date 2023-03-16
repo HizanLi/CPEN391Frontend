@@ -136,7 +136,6 @@ public class HomeActivity extends AppCompatActivity {
                 if( lowerInt > upperInt){
                     alert("Alert", "lowerInt > upperInt, jump to setting?");
                 }else{
-                    //TODO: desire_temp
                     reminder.setVisibility(View.VISIBLE);
 
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
@@ -155,6 +154,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onStartTrackingTouch(@Nullable CircularSeekBar circularSeekBar){}
         });
+
+        updateBack(26);
 
         history.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,10 +180,10 @@ public class HomeActivity extends AppCompatActivity {
 
                 if(statusLo.equalsIgnoreCase("Power ON")){
                     power.setText("Power OFF");
-                    status = "0";
+                    status = "1";
                 }else{
                     power.setText("Power ON");
-                    status = "1";
+                    status = "0";
                 }
             }
         });
@@ -219,9 +220,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        updateBack(26);
-
-        update(2);
     }
 
     private void alert(String title, String content){
@@ -244,6 +242,7 @@ public class HomeActivity extends AppCompatActivity {
 
         builder.show();
     }
+
     /*
         int mode: 1 is submit, 2 is reset
      */
@@ -258,12 +257,15 @@ public class HomeActivity extends AppCompatActivity {
 
         data.put("username", sha256username);
         data.put("device_id", deviceID);
-        data.put("desire_temp", desiredTemp);
 
         if(status == null){
             status = "1";
         }
-
+        if(status.equalsIgnoreCase("1")){
+            data.put("desire_temp", desiredTemp);
+        }else{
+            data.put("desire_temp", "0");
+        }
         data.put("status", status);
 
 
@@ -330,7 +332,7 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(HomeActivity.this,"Network Error", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onErrorResponse " + error.getMessage());
+                        Log.d(TAG, "onErrorResponse in updates " + error.getMessage());
                     }
                 });
         queue.add(request);

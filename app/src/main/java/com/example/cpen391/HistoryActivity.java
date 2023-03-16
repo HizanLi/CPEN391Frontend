@@ -143,9 +143,7 @@ BarChart chartTemp, chartHum;
     }
 
     private void temperatureAnalyze(JSONArray Jarray){
-
         ArrayList<Integer> data = new ArrayList<>();
-
 
         for(int i = 0; i < 10; i ++){
             try {
