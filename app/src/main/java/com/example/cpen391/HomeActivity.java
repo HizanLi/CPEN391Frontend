@@ -55,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
     private int backgroundColor;
     private Handler handler = new Handler();
     private Runnable runnable = null;
-    private int delay = 2000;
+    private int delay = 5000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,6 +160,7 @@ public class HomeActivity extends AppCompatActivity {
                 i.putExtra("sha256username", sha256username);
                 i.putExtra("backgroundColor", backgroundColor);
                 i.putExtra("desiredTemp", Integer.parseInt(desiredTemp));
+                i.putExtra("delay", delay);
                 startActivity(i);
             }
         });
@@ -380,10 +381,11 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         try{
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            Log.d(TAG, sharedPref.getAll().toString());
             upperInt = Integer.parseInt(sharedPref.getString("upperTempLimit", null));
             lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", null));
             deviceID = sharedPref.getString("typedDeviceID", null);
-
+            delay = Integer.parseInt(sharedPref.getString("refresh_interval", "")) * 1000;
             Log.d("deviceID: ", deviceID);
             Log.d("upper: ", String.valueOf(upperInt));
             Log.d("lower: ", String.valueOf(lowerInt));

@@ -58,19 +58,16 @@ BarChart chartTemp, chartHum;
 
         chartTemp = findViewById(R.id.barcharttemp);
         chartHum = findViewById(R.id.barcharthum);
-
         deviceID= extras.getString("deviceID");
         sha256username= extras.getString("sha256username");
+        delay = extras.getInt("delay");
 
         getHistory();
-
-
 //        ArrayList<Integer> test = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 //        dataAnalyze(test, temp);
 //
 //        ArrayList<Integer> test2 = new ArrayList<>(Arrays.asList(40, 23, 41, 42, 43, 44, 45, 46, 47));
 //        temperatureAnalyze(test2);
-
     }
 
     private void getHistory(){
