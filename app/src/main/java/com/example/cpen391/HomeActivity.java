@@ -33,6 +33,9 @@ import com.example.cpen391.R.id;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 
 import me.tankery.lib.circularseekbar.CircularSeekBar;
@@ -188,6 +191,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 reminder.setVisibility(View.INVISIBLE);
                 desiredTemp = target_temperature.getText().toString().substring(0,2);
+
                 int dt = Integer.parseInt(desiredTemp);
                 if(lowerInt <= dt && dt <= upperInt){
                     update(1);
@@ -363,7 +367,13 @@ public class HomeActivity extends AppCompatActivity {
     private void updateBack(int intTemp){
         if(lowerInt <= intTemp && intTemp <= upperInt){
             desiredTemp = Integer.toString(intTemp);
-            target_temperature.setText(intTemp + "C");
+            if(intTemp<10){
+                target_temperature.setText("0" + intTemp + "C");
+
+            }else {
+                target_temperature.setText(intTemp + "C");
+
+            }
             if(intTemp > thresholdTemp){
                 updateTVs(Color.rgb(227,38,54));
                 backgroundColor = Color.rgb(redWarm, greenWarm -  intTemp, blueWarm - intTemp);
@@ -407,8 +417,13 @@ public class HomeActivity extends AppCompatActivity {
         }
         handler.postDelayed(runnable = new Runnable() {
             public void run() {
+//                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+//                LocalDateTime now = LocalDateTime.now();
+//                Log.d(TAG, dtf.format(now));
+//                Toast.makeText(HomeActivity.this, dtf.format(now), Toast.LENGTH_SHORT).show();
                 handler.postDelayed(runnable, delay);
-                update(1);
+                //TODO
+                update(3);
             }
         }, delay);
     }
