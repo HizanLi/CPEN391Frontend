@@ -48,4 +48,10 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/help">
+        <Preference
+            android:title="Ask ChatGPT"
+            android:key="chatbot"
+            android:summary="Find answer if you have question about this app?" />
+    </PreferenceCategory>
 </PreferenceScreen>

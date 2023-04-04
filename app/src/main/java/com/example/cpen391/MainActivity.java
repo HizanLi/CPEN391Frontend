@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.cpen391.chat.ChatActivity;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONException;
@@ -24,8 +25,6 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 //Login page
 public class MainActivity extends AppCompatActivity {
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //for testing
-        Intent i = new Intent(MainActivity.this, ChatActivity.class);
+        Intent i = new Intent(MainActivity.this, HomeActivity.class);
         i.putExtra("username", "asdasdasd");
         i.putExtra("sha256username", "asdsadsad");
         i.putExtra("desiredTemp", 100);

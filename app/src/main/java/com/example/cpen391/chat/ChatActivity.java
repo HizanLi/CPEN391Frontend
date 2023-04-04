@@ -1,4 +1,4 @@
-package com.example.cpen391;
+package com.example.cpen391.chat;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import com.example.cpen391.R;
 import com.example.cpen391.chat.ChatAdapter;
 import com.example.cpen391.chat.ChatItem;
 import java.util.ArrayList;

@@ -27,6 +27,7 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
+import com.example.cpen391.chat.ChatActivity;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -139,6 +140,16 @@ public class SettingsActivity extends AppCompatActivity {
                 public boolean onPreferenceClick(Preference preference) {
                     Intent intent = new Intent(getContext(), QRcodeActivity.class);
                     someActivityResultLauncher.launch(intent);
+                    return true;
+                }
+            });
+            Preference sup = findPreference("chatbot");
+            assert sup != null;
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent(getContext(), ChatActivity.class);
+                    startActivity(intent);
                     return true;
                 }
             });
