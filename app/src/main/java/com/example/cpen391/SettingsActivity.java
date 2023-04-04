@@ -145,7 +145,7 @@ public class SettingsActivity extends AppCompatActivity {
             });
             Preference sup = findPreference("chatbot");
             assert sup != null;
-            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            sup.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Intent intent = new Intent(getContext(), ChatActivity.class);
