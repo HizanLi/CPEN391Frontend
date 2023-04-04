@@ -12,8 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.cpen391.R;
-import com.example.cpen391.chat.ChatAdapter;
-import com.example.cpen391.chat.ChatItem;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +22,7 @@ public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private RecyclerView.Adapter chatAdapter;
 
     private List<ChatItem> chatItems;
 
@@ -43,8 +42,8 @@ public class ChatActivity extends AppCompatActivity {
 
         chatItems = new ArrayList<>();  // contains all the item that needs to be displayed
 
-        adapter = new ChatAdapter(chatItems);
-        recyclerView.setAdapter(adapter);
+        chatAdapter = new ChatAdapter(chatItems);
+        recyclerView.setAdapter(chatAdapter);
 
         Date date = new Date();
         ChatItem chatItem = new ChatItem("", "", "Hi there! What can I help you with today?", date.toString().substring(0, 20));
@@ -119,8 +118,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        ImageView returnButton = (ImageView) findViewById(R.id.backBtn);
-        returnButton.setOnClickListener(new View.OnClickListener() {
+        ((ImageView) findViewById(R.id.backBtn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -135,8 +133,8 @@ public class ChatActivity extends AppCompatActivity {
         Date date = new Date();
         ChatItem chatItem = new ChatItem(myMessage, date.toString().substring(0, 20), "", "");
         chatItems.add(chatItem);
-        adapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+        chatAdapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
         backButton.setEnabled(true);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -145,8 +143,8 @@ public class ChatActivity extends AppCompatActivity {
                 Date date = new Date();
                 ChatItem chatItem = new ChatItem("", "", botMessage, date.toString().substring(0, 20));
                 chatItems.add(chatItem);
-                adapter.notifyDataSetChanged();
-                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+                chatAdapter.notifyDataSetChanged();
+                recyclerView.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
 
                 // For testing non functional requirements
                 long endTime = System.currentTimeMillis();
@@ -266,6 +264,7 @@ public class ChatActivity extends AppCompatActivity {
             botMessage = getString(R.string.app_functionalities_3_A3);
             conversation(myMessage, botMessage, startTime);
         } else {
+            assert false;
             Log.d(TAG, "Error selecting question");
         }
     }
