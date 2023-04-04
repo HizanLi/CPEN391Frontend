@@ -279,7 +279,6 @@ public class HomeActivity extends AppCompatActivity {
             target = VM_public_ip + "setTemp_sw";
         }else {// reset
             target = VM_public_ip + "recent";
-
         }
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, target, new JSONObject(data),
                 new Response.Listener<JSONObject>() {
