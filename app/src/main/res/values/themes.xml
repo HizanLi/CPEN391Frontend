@@ -13,4 +13,8 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <!-- Chat screen theme -->
+    <style name="android_icon_theme">
+        <item name="android:src">@drawable/ic_baseline_android_24</item>
+    </style>
 </resources>

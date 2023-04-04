@@ -41,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
         VM_public_ip = getString(R.string.ipAddress);
 
 
-//        //for testing
-//        Intent i = new Intent(MainActivity.this, HomeActivity.class);
-//        i.putExtra("username", "asdasdasd");
-//        i.putExtra("sha256username", "asdsadsad");
-//        i.putExtra("desiredTemp", 100);
-//        startActivity(i);
-//        //for testing
+        //for testing
+        Intent i = new Intent(MainActivity.this, ChatActivity.class);
+        i.putExtra("username", "asdasdasd");
+        i.putExtra("sha256username", "asdsadsad");
+        i.putExtra("desiredTemp", 100);
+        startActivity(i);
+        //for testing
 
         TextView usernameTV =(TextView) findViewById(R.id.email);
         TextView passwordTV =(TextView) findViewById(R.id.password);
