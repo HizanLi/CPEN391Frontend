@@ -29,12 +29,12 @@
             android:name=".chat.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".QRcodeActivity"
+            android:name=".setting.QRcodeActivity"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             tools:replace="android:screenOrientation" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".setting.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
         <activity

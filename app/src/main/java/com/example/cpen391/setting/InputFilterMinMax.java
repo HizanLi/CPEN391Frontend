@@ -1,4 +1,4 @@
-package com.example.cpen391;
+package com.example.cpen391.setting;
 
 import android.text.InputFilter;
 import android.text.Spanned;
