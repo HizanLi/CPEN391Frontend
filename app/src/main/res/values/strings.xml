@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CPEN391</string>
+    <string name="app_name">SSART</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
