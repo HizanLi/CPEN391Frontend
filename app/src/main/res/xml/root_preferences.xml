@@ -20,6 +20,7 @@
             android:defaultValue="OFF"
             android:entries="@array/auto_refresh_interval"
             android:entryValues="@array/auto_refresh_interval_value"
+            app:defaultValue="5"
             android:key="refresh_interval"
             android:title="Self Refresh Interval"
             app:summary="Set the frequency of pulling readings from server"/>

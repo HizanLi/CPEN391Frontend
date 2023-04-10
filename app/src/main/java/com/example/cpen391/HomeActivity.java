@@ -1,7 +1,5 @@
 package com.example.cpen391;
 
-import static android.app.PendingIntent.getActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -61,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        Log.d(TAG,"HOMENOW");
         VM_public_ip = getString(R.string.ipAddress);
 
         Bundle extras = getIntent().getExtras();
@@ -220,12 +218,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void alert(String title, String content){
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
         builder.setMessage(content);
         builder.setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
+                Log.d(TAG,"alert seting");
                 Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
                 i.putExtra("backgroundColor", backgroundColor);
                 startActivity(i);
@@ -275,9 +274,10 @@ public class HomeActivity extends AppCompatActivity {
 
         if(mode == 1){// submit
             target = VM_public_ip + "setTemp_sw";
-        }else {// reset
+        }else {// reset mode == 2 or mode == 3
             target = VM_public_ip + "recent";
         }
+
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, target, new JSONObject(data),
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -298,15 +298,13 @@ public class HomeActivity extends AppCompatActivity {
 
                             } else if (mode == 2) {
                                 //current
-
-
                                 int ONOFF = response.getInt("status");
                                 int dtemp = response.getInt("desire_temp");
 
                                 //on or off
-
-//                                desiredTemp = Integer.toString(dtemp);
-//                                target_temperature.setText(desiredTemp + "C");
+                                //TODO check this
+                                desiredTemp = Integer.toString(dtemp);
+                                target_temperature.setText(desiredTemp + "C");
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
                                 seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
                                 updateBack(dtemp);
@@ -329,6 +327,7 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(HomeActivity.this,"Network Error", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "In update mode: " + mode);
                         Log.d(TAG, "onErrorResponse in updates " + error.getMessage());
                     }
                 });
@@ -408,18 +407,11 @@ public class HomeActivity extends AppCompatActivity {
             updateBack(26);
             status = "1";
 
-            Intent i = new Intent(HomeActivity.this, SettingsActivity.class);
-            i.putExtra("backgroundColor", backgroundColor);
-            startActivity(i);
+            alert("Welcome", "You have not complete settings, jump to setting?");
         }
         handler.postDelayed(runnable = new Runnable() {
             public void run() {
-//                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-//                LocalDateTime now = LocalDateTime.now();
-//                Log.d(TAG, dtf.format(now));
-//                Toast.makeText(HomeActivity.this, dtf.format(now), Toast.LENGTH_SHORT).show();
                 handler.postDelayed(runnable, delay);
-                //TODO
                 update(3);
             }
         }, delay);
