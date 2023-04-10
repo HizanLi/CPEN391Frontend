@@ -108,13 +108,11 @@ public class HomeActivity extends AppCompatActivity {
 
         seekbar = findViewById(R.id.seek_bar);
 
-//        seekbar.setCircleColor(Color.rgb(245, 245, 245));
-//        seekbar.setCircleFillColor(Color.rgb(245, 245, 245));
         seekbar.setCircleProgressColor(Color.rgb(232, 0, 0));
-//        seekbar.setCircleColor(Color.rgb(245, 245, 245));
         seekbar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(@Nullable CircularSeekBar circularSeekBar, float v, boolean b){
+
                 if(lowerInt < upperInt){
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
                     int intTemp = (int)currentTemp;
@@ -125,6 +123,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(@Nullable CircularSeekBar circularSeekBar) {
+
                 //In settings, lowerInt > upperInt
                 if( lowerInt > upperInt){
                     alert("Alert", "lowerInt > upperInt, jump to setting?");
@@ -134,6 +133,7 @@ public class HomeActivity extends AppCompatActivity {
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
                     int intTemp = (int)currentTemp;
 
+                    desiredTemp = Integer.toString(intTemp);
 
                     if(! (lowerInt <= intTemp && intTemp <= upperInt)){
                         Toast.makeText(HomeActivity.this, "Not in desired range", Toast.LENGTH_SHORT).show();
@@ -167,17 +167,21 @@ public class HomeActivity extends AppCompatActivity {
         power.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reminder.setVisibility(View.VISIBLE);
-
-                String statusLo = power.getText().toString();
-                HashMap<String, String> data = new HashMap<>();
-
-                if(statusLo.equalsIgnoreCase("Power ON")){
-                    power.setText("Power OFF");
-                    status = "1";
-                }else{
+                if(power.getText().toString().equalsIgnoreCase("Power OFF")){
+                    desiredTemp = "0";
                     power.setText("Power ON");
-                    status = "0";
+                    seekbar.setProgress(0);
+                    seekbar.setEnabled(false);
+                    target_temperature.setText("OFF");
+                    update(1);
+
+                }else{
+                    power.setText("Power OFF");
+                    updateBack(lowerInt);
+                    desiredTemp = Integer.toString(lowerInt);
+                    target_temperature.setText(Integer.toString(lowerInt) + "C");
+                    seekbar.setProgress((float) lowerInt / (maxTemp - minTemp) * seekbar.getMax());
+                    seekbar.setEnabled(true);
                 }
             }
         });
@@ -185,8 +189,12 @@ public class HomeActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(power.getText().toString().equalsIgnoreCase("Power on")){
+                    return;
+                }
                 reminder.setVisibility(View.INVISIBLE);
-                desiredTemp = target_temperature.getText().toString().substring(0,2);
+//                int sl = target_temperature.getText().toString().length();
+//                desiredTemp = target_temperature.getText().toString().substring(0,sl - 1);
 
                 int dt = Integer.parseInt(desiredTemp);
                 if(lowerInt <= dt && dt <= upperInt){
@@ -200,6 +208,10 @@ public class HomeActivity extends AppCompatActivity {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(power.getText().toString().equalsIgnoreCase("Power on")){
+                    return;
+                }
+
                 reminder.setVisibility(View.INVISIBLE);
 
                 update(2);
@@ -254,19 +266,16 @@ public class HomeActivity extends AppCompatActivity {
         data.put("username", sha256username);
         data.put("device_id", deviceID);
 
-        if(status == null){
-            status = "1";
-        }
-        if(status.equalsIgnoreCase("1")){
+        if(power.getText().toString().equalsIgnoreCase("Power OFF")){
             data.put("desire_temp", desiredTemp);
+            data.put("status", "1");
         }else{
             data.put("desire_temp", "0");
+            data.put("status", "0");
         }
-        data.put("status", status);
 
 
-        Log.d(TAG, "In update mode: " + mode);
-        Log.d(TAG, data.toString());
+        Log.d(TAG, "data.toString(): " +data.toString());
 
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.start();
@@ -282,8 +291,7 @@ public class HomeActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "response.toString()");
-                        Log.d(TAG, response.toString());
+                        Log.d(TAG, "onResponse: " + response.toString());
                         try {//TODO: check connection with sever
 
                             int ctemp = response.getInt("current_temp");
@@ -298,26 +306,13 @@ public class HomeActivity extends AppCompatActivity {
 
                             } else if (mode == 2) {
                                 //current
-                                int ONOFF = response.getInt("status");
-                                int dtemp = response.getInt("desire_temp");
 
-                                //on or off
-                                //TODO check this
-                                desiredTemp = Integer.toString(dtemp);
-                                target_temperature.setText(desiredTemp + "C");
+                                int dtemp = response.getInt("desire_temp");
+//                                target_temperature.setText(Integer.toString(dtemp));
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
                                 seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
                                 updateBack(dtemp);
-
-                                if (ONOFF == 1) {
-                                    power.setText("Power ON");
-                                    status = "1";
-                                } else {
-                                    power.setText("Power OFF");
-                                    status = "0";
-                                }
                             }
-
                         } catch (JSONException e) {
                             Log.d(TAG, "Json format error");
                         }
@@ -327,7 +322,7 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(HomeActivity.this,"Network Error", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "In update mode: " + mode);
+                        Log.d(TAG, "Mode On error: " + mode);
                         Log.d(TAG, "onErrorResponse in updates " + error.getMessage());
                     }
                 });
@@ -361,6 +356,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void updateBack(int intTemp){
+
         if(lowerInt <= intTemp && intTemp <= upperInt){
             desiredTemp = Integer.toString(intTemp);
             if(intTemp<10){
@@ -405,7 +401,6 @@ public class HomeActivity extends AppCompatActivity {
             deviceID = "None";
             desiredTemp = "26";
             updateBack(26);
-            status = "1";
 
             alert("Welcome", "You have not complete settings, jump to setting?");
         }
