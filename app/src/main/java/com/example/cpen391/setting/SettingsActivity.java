@@ -72,8 +72,9 @@ public class SettingsActivity extends AppCompatActivity {
                             Intent intent = result.getData();
                             assert intent != null;
                             String id = intent.getStringExtra("MESSAGE");
-                            deviceID.setSummary("Your device is: "+ id);
+                            deviceID.setSummary("Your device ID is: "+ id);
                             deviceID.setText(id);
+                            Log.d(TAG, "id: "+ id);
                         }
                     });
 
@@ -95,9 +96,9 @@ public class SettingsActivity extends AppCompatActivity {
                         if(s.equalsIgnoreCase("lowerTempLimit") ||s.equalsIgnoreCase("upperTempLimit")){
                             String temp = sharedPreferences.getString(s, "");
                             preference.setSummary("Current Setting: " + temp + "C");
-                        }else if(s.equalsIgnoreCase("typeDeviceID")){
+                        }else if(s.equalsIgnoreCase("typedDeviceID")){
                             String id = sharedPreferences.getString(s, "");
-                            preference.setSummary("Current Device ID: " + id);
+                            preference.setSummary("Your Device ID is: " + id);
                         }
                     }
                 }
@@ -125,6 +126,11 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
             lowerLim.setSummary("Current Setting: " + lowerLim.getText() + "C");
+
+            EditTextPreference deviceIDD = findPreference("typedDeviceID");
+            assert deviceIDD != null;
+
+            deviceIDD.setSummary("Your Device ID is: "+deviceIDD.getText() );
 
             Preference button = findPreference("qrScanner");
             assert button != null;
