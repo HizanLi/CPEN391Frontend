@@ -48,7 +48,7 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 
 public class HomeActivity extends AppCompatActivity {
     public static String VM_public_ip;
-    private final int maxTemp = 100, minTemp = 0;
+    private final int maxTemp = 50, minTemp = 0;
     private final String TAG = "HomeActivity";
     private TextView ctemperature, chumidity, target_temperature, remainderContent;
     private Button power, submit, reset, history;
@@ -339,7 +339,7 @@ public class HomeActivity extends AppCompatActivity {
                                 int result = response.getInt("result");
                                 Log.d(TAG, "result: "+ result);
 
-                            } else {
+                            } else if(mode == 2){
                                 int dtemp = response.getInt("desire_temp");
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
                                 seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
