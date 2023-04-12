@@ -50,17 +50,17 @@ public class HomeActivity extends AppCompatActivity {
     public static String VM_public_ip;
     private final int maxTemp = 100, minTemp = 0;
     private final String TAG = "HomeActivity";
-    private TextView ctemperature, chumidity, target_temperature;
+    private TextView ctemperature, chumidity, target_temperature, remainderContent;
     private Button power, submit, reset, history;
     CircularSeekBar seekbar;
     private int upperInt, lowerInt;
     private final int thresholdTemp = 30;
     private final int redWarm = 255, greenWarm = 265, blueWarm = 265;
     private final int redCold = 153, greenCold = 190, blueCold = 255;
-    private static String username, sha256username, deviceID, desiredTemp, status;
+    private static String sha256username, deviceID, desiredTemp;
     private ImageView setting;
     private ConstraintLayout background;
-    private LinearLayout reminder;
+    private LinearLayout remainderaLyout;
     private int backgroundColor;
     private Handler handler = new Handler();
     private Spinner chooseDevice;
@@ -77,7 +77,6 @@ public class HomeActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
-        username= extras.getString("username");
         sha256username= extras.getString("sha256username");
 
         backgroundColor = Color.rgb(0,0,0);
@@ -98,10 +97,11 @@ public class HomeActivity extends AppCompatActivity {
 
             deviceID = "None";
             desiredTemp = "26";
-            status = "1";
+
         }
 
         //Textview
+        remainderContent = findViewById(R.id.remainderContent);
         target_temperature = findViewById(R.id.target_temperature);
         ctemperature = findViewById(R.id.ctemperature);
         chumidity = findViewById(R.id.chumidity);
@@ -117,7 +117,7 @@ public class HomeActivity extends AppCompatActivity {
 
         background = findViewById(id.colorTheme);
 
-        reminder = findViewById(R.id.remainder_layout);
+        remainderaLyout = findViewById(R.id.remainder_layout);
 
         seekbar = findViewById(R.id.seek_bar);
 
@@ -141,7 +141,7 @@ public class HomeActivity extends AppCompatActivity {
                 if( lowerInt > upperInt){
                     alert("Alert", "lowerInt > upperInt, jump to setting?");
                 }else{
-                    reminder.setVisibility(View.VISIBLE);
+                    remainderaLyout.setVisibility(View.VISIBLE);
 
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
                     int intTemp = (int)currentTemp;
@@ -195,6 +195,7 @@ public class HomeActivity extends AppCompatActivity {
                     target_temperature.setText(Integer.toString(lowerInt) + "C");
                     seekbar.setProgress((float) lowerInt / (maxTemp - minTemp) * seekbar.getMax());
                     seekbar.setEnabled(true);
+                    update(1);
                 }
             }
         });
@@ -205,7 +206,7 @@ public class HomeActivity extends AppCompatActivity {
                 if(power.getText().toString().equalsIgnoreCase("Power on")){
                     return;
                 }
-                reminder.setVisibility(View.INVISIBLE);
+                remainderaLyout.setVisibility(View.INVISIBLE);
 //                int sl = target_temperature.getText().toString().length();
 //                desiredTemp = target_temperature.getText().toString().substring(0,sl - 1);
 
@@ -225,7 +226,7 @@ public class HomeActivity extends AppCompatActivity {
                     return;
                 }
 
-                reminder.setVisibility(View.INVISIBLE);
+                remainderaLyout.setVisibility(View.INVISIBLE);
 
                 update(2);
             }
@@ -300,10 +301,8 @@ public class HomeActivity extends AppCompatActivity {
 
         if(power.getText().toString().equalsIgnoreCase("Power OFF")){
             data.put("desire_temp", desiredTemp);
-            data.put("status", "1");
         }else{
             data.put("desire_temp", "0");
-            data.put("status", "0");
         }
 
 
@@ -326,6 +325,7 @@ public class HomeActivity extends AppCompatActivity {
                         Log.d(TAG, "onResponse: " + response.toString());
                         try {//TODO: check connection with sever
 
+
                             int ctemp = response.getInt("current_temp");
                             int chum = response.getInt("current_hum");
 
@@ -337,13 +337,29 @@ public class HomeActivity extends AppCompatActivity {
                                 Log.d(TAG, "result: "+ result);
 
                             } else if (mode == 2) {
-                                //current
-
                                 int dtemp = response.getInt("desire_temp");
-//                                target_temperature.setText(Integer.toString(dtemp));
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
                                 seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
                                 updateBack(dtemp);
+                            }
+
+                            if (response.get("status").toString().equalsIgnoreCase("1")) {
+                                //hardware Mode
+                                seekbar.setEnabled(false);
+                                power.setEnabled(false);
+                                submit.setEnabled(false);
+                                reset.setEnabled(false);
+                                remainderContent.setText(R.string.reminder_hardware);
+                                remainderContent.setVisibility(View.VISIBLE);
+                            }else{
+                                //software Mode
+                                seekbar.setEnabled(true);
+                                power.setEnabled(true);
+                                submit.setEnabled(true);
+                                reset.setEnabled(false);
+                                remainderContent.setText(R.string.reminder_click);
+                                //TODO
+                                //What is remainderContent.setVisibility(View.?);
                             }
                         } catch (JSONException e) {
                             Log.d(TAG, "Json format error");

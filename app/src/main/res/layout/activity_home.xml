@@ -206,11 +206,11 @@
             android:textSize="20dp"
             android:textStyle="bold" />
         <TextView
-            android:id="@+id/remainder"
+            android:id="@+id/remainderContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="Click submit to upload your changes \nClick reset to erase your changes "
+            android:text="@string/reminder_click"
             android:textColor="#0F52BA"
             android:textSize="20dp"
             android:textStyle="bold" />

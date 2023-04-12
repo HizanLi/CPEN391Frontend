@@ -44,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
         VM_public_ip = getString(R.string.ipAddress);
 
-        Intent i = new Intent(MainActivity.this, HomeActivity.class);
-
-        i.putExtra("username", "username");
-        i.putExtra("sha256username", getSha256Hash("username"));
-
-        startActivity(i);
+//        Intent i = new Intent(MainActivity.this, HomeActivity.class);
+//
+//        i.putExtra("username", "username");
+//        i.putExtra("sha256username", getSha256Hash("username"));
+//
+//        startActivity(i);
 
         TextView usernameTV =(TextView) findViewById(R.id.email);
         TextView passwordTV =(TextView) findViewById(R.id.password);
