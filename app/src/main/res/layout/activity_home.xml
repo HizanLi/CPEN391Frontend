@@ -101,7 +101,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45">
+        app:layout_constraintVertical_bias="0.449">
 
         <TextView
             android:id="@+id/target_temperature"
@@ -122,6 +122,16 @@
             android:textColor="#0F52BA"
             android:textSize="25dp"
             android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/deviceID_Spanner"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:dropDownWidth="match_parent"
+            android:spinnerMode="dropdown"
+            app:layout_constraintStart_toEndOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/power" />
     </LinearLayout>
 
     <Button
@@ -139,9 +149,9 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.144"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seek_bar">
 
@@ -216,15 +226,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_settings_suggest_24" />
 
-    <Spinner
-        android:id="@+id/deviceID_Spanner"
-        android:layout_width="140dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/power"
-        android:spinnerMode="dropdown"
-        android:dropDownWidth="match_parent"
-        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
