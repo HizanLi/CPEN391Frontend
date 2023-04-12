@@ -136,10 +136,12 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.144"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seek_bar">
 
@@ -148,29 +150,29 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:layout_marginEnd="5dp"
                 android:id="@+id/reset"
-                android:backgroundTint="#0F52BA"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:backgroundTint="#0F52BA"
                 android:text="Reset" />
 
             <Button
-                android:layout_marginStart="5dp"
                 android:id="@+id/submit"
-                android:backgroundTint="#0F52BA"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:backgroundTint="#0F52BA"
                 android:text="Submit" />
         </LinearLayout>
 
 
         <Button
             android:id="@+id/viewHistory"
-            android:backgroundTint="#0F52BA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:backgroundTint="#0F52BA"
             android:text="View History" />
     </LinearLayout>
 
@@ -213,4 +215,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_settings_suggest_24" />
+
+    <Spinner
+        android:id="@+id/deviceID_Spanner"
+        android:layout_width="140dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/power"
+        android:spinnerMode="dropdown"
+        android:dropDownWidth="match_parent"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

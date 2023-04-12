@@ -1,5 +1,6 @@
 package com.example.cpen391.setting;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,6 +24,17 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.cpen391.R;
 import com.example.cpen391.chat.ChatActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -75,6 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
                             deviceID.setSummary("Your device ID is: "+ id);
                             deviceID.setText(id);
                             Log.d(TAG, "id: "+ id);
+                            writeToJson(getContext(), id);
                         }
                     });
 
@@ -157,6 +170,102 @@ public class SettingsActivity extends AppCompatActivity {
             if(dataPref.getValue() == null){
                 dataPref.setValueIndex(0); //set to index of your deafult value
             }
+
+            Preference deleteALL = findPreference("deleteAllId");
+            assert deleteALL != null;
+            deleteALL.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(@NonNull Preference preference) {
+                    deleteCached(getContext());
+                    return true;
+                }
+            });
+
+        }
+
+        private void deleteCached(Context applicationContext) {
+            File myObj = new File(applicationContext.getFilesDir(), "allDevice.json");
+            if (myObj.delete()) {
+                System.out.println("Deleted the file: " + myObj.getName());
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+        }
+
+        private void writeToJson(Context applicationContext, String DeviceID){
+            File file = new File(String.valueOf(applicationContext.getFilesDir()), "allDevice.json");
+            if(file.exists() && !file.isDirectory()) {
+                try{
+                    FileReader fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line = bufferedReader.readLine();
+
+                    while (line != null) {
+                        stringBuilder.append(line);
+                        line = bufferedReader.readLine();
+                    }
+                    bufferedReader.close();
+                    // This response will have Json Format String
+                    String result = stringBuilder.toString();
+                    Log.d(TAG, "reading result: " + result);
+
+                    JSONObject ids = new JSONObject(result);
+                    JSONArray array = ids.getJSONArray("idsArray");
+
+                    if(!hasValue(array,DeviceID)){
+                        Log.d(TAG, "adding new device");
+                        array.put(DeviceID);
+                    }
+
+                    try {
+                        FileOutputStream writer = new FileOutputStream(file);
+                        writer.write(ids.toString().getBytes());
+                        writer.flush();
+                        writer.close();
+                        Log.d(TAG, "write to file path is: " + file.getCanonicalPath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return ;
+                    }
+
+                }catch (IOException e){
+                    // Can not read file
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                JSONObject ids = new JSONObject();
+                JSONArray array = new JSONArray();
+                array.put("None");
+                array.put(DeviceID);
+
+                try {
+                    ids.put("idsArray", array);
+                } catch (JSONException e) {
+                    Log.d(TAG, "JSONException");
+                    e.printStackTrace();
+                }
+
+                try {
+                    FileOutputStream writer = new FileOutputStream(file);
+                    writer.write(ids.toString().getBytes());
+                    writer.flush();
+                    writer.close();
+                    Log.d(TAG, "write to file path is: " + file.getCanonicalPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+        public boolean hasValue(JSONArray array, String value) throws JSONException {
+            for(int i = 0; i < array.length(); i++) {
+                if(array.get(i).toString().equalsIgnoreCase(value)) return true;
+            }
+            return false;
         }
     }
 }

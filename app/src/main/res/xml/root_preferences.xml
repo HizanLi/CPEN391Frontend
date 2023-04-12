@@ -12,6 +12,14 @@
             android:title="Your Device ID" />
 
         <Preference
+            android:defaultValue="None"
+            android:key="deleteAllId"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Delete All Device"
+            android:summary="Remove all id from previous page"/>
+
+        <Preference
             android:title="QR code Sanner"
             android:key="qrScanner"
             android:summary="Scan the QR code on the Device" />

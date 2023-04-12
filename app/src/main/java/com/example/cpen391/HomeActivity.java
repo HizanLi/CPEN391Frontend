@@ -1,6 +1,7 @@
 package com.example.cpen391;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,9 +10,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +33,15 @@ import com.android.volley.toolbox.Volley;
 import com.example.cpen391.R.id;
 import com.example.cpen391.setting.SettingsActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.tankery.lib.circularseekbar.CircularSeekBar;
@@ -53,8 +63,11 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout reminder;
     private int backgroundColor;
     private Handler handler = new Handler();
+    private Spinner chooseDevice;
     private Runnable runnable = null;
     private int delay = 5000;
+
+    private static ArrayList<String> spanItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,6 +240,24 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+
+        chooseDevice = findViewById(id.deviceID_Spanner);
+        setNewSpanItem();
+        chooseDevice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String targerId = spanItems.get(i);
+                Log.d(TAG, "targerId: '" + targerId+"'");
+                deviceID = targerId;
+                update(2);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void alert(String title, String content){
@@ -255,6 +286,7 @@ public class HomeActivity extends AppCompatActivity {
         int mode: 1 is submit, 2 is reset
      */
     private void update(int mode){
+        Log.d(TAG, "deviceID: " + deviceID);
 
         if(deviceID.equalsIgnoreCase("None")){
             alert("Setting", "Please Update Your Device Id");
@@ -392,7 +424,6 @@ public class HomeActivity extends AppCompatActivity {
             Log.d("upper: ", String.valueOf(upperInt));
             Log.d("lower: ", String.valueOf(lowerInt));
             update(2);
-
         }catch (Exception e){
             //first time open
             upperInt = 100;
@@ -410,11 +441,83 @@ public class HomeActivity extends AppCompatActivity {
                 update(3);
             }
         }, delay);
+
+        setNewSpanItem();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(runnable); //stop handler when activity not visible super.onPause();
+    }
+
+    private void setNewSpanItem(){
+        String re = readFromJson(this);
+
+        if(re != null){
+            Log.d(TAG, "reading result: " + re);
+            try {
+                JSONObject jobj = new JSONObject(re);
+                JSONArray jary = jobj.getJSONArray("idsArray");
+                Log.d(TAG,jary.toString());
+                spanItems = new ArrayList<String>();
+
+                for (int i=0;i<jary.length();i++){
+                    spanItems.add(jary.getString(i));
+                }
+                Log.d(TAG, spanItems.toString());
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spanItems);
+                //set the spinners adapter to the previously created one.
+                chooseDevice.setAdapter(adapter);
+
+                int index = getIndex(chooseDevice, deviceID);
+                chooseDevice.setSelection(index);
+                return;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        spanItems = new ArrayList<String>();
+        spanItems.add("None");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spanItems);
+        //set the spinners adapter to the previously created one.
+        chooseDevice.setAdapter(adapter);
+        int index = getIndex(chooseDevice, deviceID);
+        chooseDevice.setSelection(index);
+    }
+    private int getIndex(Spinner spinner, String myString){
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                return i;
+            }
+        }
+        return 0;
+    }
+    private String readFromJson(Context applicationContext){
+        File file = new File(String.valueOf(applicationContext.getFilesDir()), "allDevice.json");
+        if(file.exists() && !file.isDirectory()) {
+            try{
+
+                FileReader fileReader = new FileReader(file);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                StringBuilder stringBuilder = new StringBuilder();
+                String line = bufferedReader.readLine();
+                while (line != null) {
+                    stringBuilder.append(line).append("\n");
+                    line = bufferedReader.readLine();
+                }
+                bufferedReader.close();
+                // This response will have Json Format String
+                String result = stringBuilder.toString();
+
+                return result;
+            }catch (IOException e){
+                // Can not read file
+                e.printStackTrace();
+                return null;
+            }
+        }
+        // File not exist
+        return null;
     }
 }

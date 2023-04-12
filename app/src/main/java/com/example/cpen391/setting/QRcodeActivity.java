@@ -48,7 +48,7 @@ public class QRcodeActivity extends CaptureActivity {
             } else {
                 Intent intent=new Intent();
                 intent.putExtra("MESSAGE", intentResult.getContents());
-                setResult(2,intent);
+                setResult(2, intent);
                 finish();//finishing activit
             }
         } else {
