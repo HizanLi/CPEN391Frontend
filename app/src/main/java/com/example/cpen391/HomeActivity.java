@@ -300,6 +300,9 @@ public class HomeActivity extends AppCompatActivity {
         data.put("device_id", deviceID);
 
         if(power.getText().toString().equalsIgnoreCase("Power OFF")){
+            if(desiredTemp.length() == 1){
+                desiredTemp = "0"+desiredTemp;
+            }
             data.put("desire_temp", desiredTemp);
         }else{
             data.put("desire_temp", "0");

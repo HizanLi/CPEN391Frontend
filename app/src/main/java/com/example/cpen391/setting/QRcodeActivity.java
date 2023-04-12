@@ -1,7 +1,6 @@
 package com.example.cpen391.setting;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;

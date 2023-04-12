@@ -2,10 +2,6 @@ package com.example.cpen391;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.preference.PreferenceManager;
-
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -63,11 +59,6 @@ BarChart chartTemp, chartHum;
         delay = extras.getInt("delay");
 
         getHistory();
-//        ArrayList<Integer> test = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-//        dataAnalyze(test, temp);
-//
-//        ArrayList<Integer> test2 = new ArrayList<>(Arrays.asList(40, 23, 41, 42, 43, 44, 45, 46, 47));
-//        temperatureAnalyze(test2);
     }
 
     private void getHistory(){
