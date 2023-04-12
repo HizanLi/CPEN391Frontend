@@ -336,7 +336,7 @@ public class HomeActivity extends AppCompatActivity {
                                 int result = response.getInt("result");
                                 Log.d(TAG, "result: "+ result);
 
-                            } else if (mode == 2) {
+                            } else {
                                 int dtemp = response.getInt("desire_temp");
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
                                 seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
@@ -356,7 +356,7 @@ public class HomeActivity extends AppCompatActivity {
                                 seekbar.setEnabled(true);
                                 power.setEnabled(true);
                                 submit.setEnabled(true);
-                                reset.setEnabled(false);
+                                reset.setEnabled(true);
                                 remainderContent.setText(R.string.reminder_click);
                                 //TODO
                                 //What is remainderContent.setVisibility(View.?);
