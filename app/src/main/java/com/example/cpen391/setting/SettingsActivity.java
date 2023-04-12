@@ -176,6 +176,7 @@ public class SettingsActivity extends AppCompatActivity {
             deleteALL.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(@NonNull Preference preference) {
+                    deviceIDD.setSummary("Your Device ID is: None" );
                     deleteCached(getContext());
                     return true;
                 }
