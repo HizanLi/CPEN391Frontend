@@ -309,7 +309,7 @@ public class HomeActivity extends AppCompatActivity {
         }
 
 
-        Log.d(TAG, "data.toString(): " +data.toString());
+        Log.d(TAG, "Mode is: " + mode  + ", data.toString(): " +data.toString());
 
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.start();
@@ -335,34 +335,37 @@ public class HomeActivity extends AppCompatActivity {
                             chumidity.setText(Integer.toString(chum) + "%");
                             ctemperature.setText(Integer.toString(ctemp) + "C");
 
-                            if(mode == 1){
+                            Log.d(TAG, Integer.toString(mode));
+
+                            if(mode == 1){//submit
                                 int result = response.getInt("result");
                                 Log.d(TAG, "result: "+ result);
+                                return;
 
-                            } else if(mode == 2){
-                                int dtemp = response.getInt("desire_temp");
-                                Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
-                                seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
-                                updateBack(dtemp, true);
-                            }
-
-                            if (response.get("status").toString().equalsIgnoreCase("1")) {
-                                //hardware Mode
-                                seekbar.setEnabled(false);
-                                power.setEnabled(false);
-                                submit.setEnabled(false);
-                                reset.setEnabled(false);
-                                remainderContent.setText(R.string.reminder_hardware);
-                                remainderContent.setVisibility(View.VISIBLE);
-                            }else{
-                                //software Mode
-                                seekbar.setEnabled(true);
-                                power.setEnabled(true);
-                                submit.setEnabled(true);
-                                reset.setEnabled(true);
-                                remainderContent.setText(R.string.reminder_click);
-                                //TODO
-                                //What is remainderContent.setVisibility(View.?);
+                            } else {
+                                String status = response.get("status").toString();
+                                if (status.equalsIgnoreCase("1")) {
+                                    //hardware Mode
+                                    seekbar.setEnabled(false);
+                                    power.setEnabled(false);
+                                    submit.setEnabled(false);
+                                    reset.setEnabled(false);
+                                    remainderContent.setText(R.string.reminder_hardware);
+                                    remainderContent.setVisibility(View.VISIBLE);
+                                }else{
+                                    //software Mode
+                                    seekbar.setEnabled(true);
+                                    power.setEnabled(true);
+                                    submit.setEnabled(true);
+                                    reset.setEnabled(true);
+                                    remainderContent.setText(R.string.reminder_click);
+                                }
+                                if(mode != 3 || status.equalsIgnoreCase("1")){
+                                    int dtemp = response.getInt("desire_temp");
+                                    Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
+                                    seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
+                                    updateBack(dtemp, true);
+                                }
                             }
                         } catch (JSONException e) {
                             Log.d(TAG, "Json format error");
