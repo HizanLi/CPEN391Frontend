@@ -48,7 +48,7 @@ import me.tankery.lib.circularseekbar.CircularSeekBar;
 
 public class HomeActivity extends AppCompatActivity {
     public static String VM_public_ip;
-    private final int maxTemp = 100, minTemp = 0;
+    private final int maxTemp = 60, minTemp = 0;
     private final String TAG = "HomeActivity";
     private TextView ctemperature, chumidity, target_temperature, remainderContent;
     private Button power, submit, reset, history;
@@ -130,7 +130,7 @@ public class HomeActivity extends AppCompatActivity {
                     float currentTemp = ((maxTemp - minTemp) / seekbar.getMax()) * seekbar.getProgress();
                     int intTemp = (int)currentTemp;
 
-                    updateBack(intTemp);
+                    updateBack(intTemp, false);
                 }
             }
 
@@ -152,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(HomeActivity.this, "Not in desired range", Toast.LENGTH_SHORT).show();
                         alert("Jump", "Not in desired Range, jump to setting?");
                     }else{
-                        updateBack(intTemp);
+                        updateBack(intTemp, false);
                     }
                 }
             }
@@ -161,7 +161,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onStartTrackingTouch(@Nullable CircularSeekBar circularSeekBar){}
         });
 
-        updateBack(26);
+        updateBack(0, false);
 
         history.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,9 +188,9 @@ public class HomeActivity extends AppCompatActivity {
                     target_temperature.setText("OFF");
                     update(1);
 
+
                 }else{
                     power.setText("Power OFF");
-                    updateBack(lowerInt);
                     desiredTemp = Integer.toString(lowerInt);
                     target_temperature.setText(Integer.toString(lowerInt) + "C");
                     seekbar.setProgress((float) lowerInt / (maxTemp - minTemp) * seekbar.getMax());
@@ -343,7 +343,7 @@ public class HomeActivity extends AppCompatActivity {
                                 int dtemp = response.getInt("desire_temp");
                                 Log.d(TAG, "dtemp: " + response.getInt("desire_temp"));
                                 seekbar.setProgress((float) dtemp / (maxTemp - minTemp) * seekbar.getMax());
-                                updateBack(dtemp);
+                                updateBack(dtemp, true);
                             }
 
                             if (response.get("status").toString().equalsIgnoreCase("1")) {
@@ -374,6 +374,7 @@ public class HomeActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(HomeActivity.this,"Network Error", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "Mode On error: " + mode);
+                        Log.d(TAG, "Device ID: " + deviceID);
                         Log.d(TAG, "onErrorResponse in updates " + error.getMessage());
                     }
                 });
@@ -406,9 +407,9 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void updateBack(int intTemp){
+    private void updateBack(int intTemp, boolean forced){
 
-        if(lowerInt <= intTemp && intTemp <= upperInt){
+        if((lowerInt <= intTemp && intTemp <= upperInt) || forced){
             desiredTemp = Integer.toString(intTemp);
             if(intTemp<10){
                 target_temperature.setText("0" + intTemp + "C");
@@ -450,7 +451,7 @@ public class HomeActivity extends AppCompatActivity {
 
             deviceID = "None";
             desiredTemp = "26";
-            updateBack(26);
+            updateBack(0, true);
 
             alert("Welcome", "You have not complete settings, jump to setting?");
         }

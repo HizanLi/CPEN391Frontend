@@ -124,7 +124,7 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onBindEditText(@NonNull EditText editText) {
                     editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                    editText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "100")});
+                    editText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "60")});
                 }
             });
             upperLim.setSummary("Current Setting: " + upperLim.getText() + "C");
@@ -135,7 +135,7 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onBindEditText(@NonNull EditText editText) {
                     editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                    editText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "100")});
+                    editText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "60")});
                 }
             });
             lowerLim.setSummary("Current Setting: " + lowerLim.getText() + "C");

@@ -38,8 +38,8 @@
     <PreferenceCategory app:title="@string/temp_header">
 
         <EditTextPreference
-            android:defaultValue="100"
-            app:summary="Current Setting: 100C"
+            android:defaultValue="60"
+            app:summary="Current Setting: 60C"
             android:inputType="number"
             android:key="upperTempLimit"
             android:selectAllOnFocus="true"
