@@ -161,7 +161,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onStartTrackingTouch(@Nullable CircularSeekBar circularSeekBar){}
         });
 
-        updateBack(0, false);
+        updateBack(lowerInt, false);
 
         history.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -451,7 +451,7 @@ public class HomeActivity extends AppCompatActivity {
 
             deviceID = "None";
             desiredTemp = "26";
-            updateBack(0, true);
+            updateBack(lowerInt, true);
 
             alert("Welcome", "You have not complete settings, jump to setting?");
         }
