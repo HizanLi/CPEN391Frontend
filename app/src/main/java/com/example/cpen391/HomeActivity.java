@@ -359,6 +359,8 @@ public class HomeActivity extends AppCompatActivity {
                                     submit.setEnabled(true);
                                     reset.setEnabled(true);
                                     remainderContent.setText(R.string.reminder_click);
+                                    remainderContent.setVisibility(View.INVISIBLE);
+
                                 }
                                 if(mode != 3 || status.equalsIgnoreCase("1")){
                                     int dtemp = response.getInt("desire_temp");
@@ -443,6 +445,20 @@ public class HomeActivity extends AppCompatActivity {
             lowerInt = Integer.parseInt(sharedPref.getString("lowerTempLimit", null));
             deviceID = sharedPref.getString("typedDeviceID", null);
             delay = Integer.parseInt(sharedPref.getString("refresh_interval", "")) * 1000;
+
+            if(Integer.parseInt(desiredTemp) > upperInt){
+                desiredTemp = Integer.toString(upperInt);
+                seekbar.setProgress((float) upperInt / (maxTemp - minTemp) * seekbar.getMax());
+                updateBack(upperInt, true);
+                remainderaLyout.setVisibility(View.VISIBLE);
+
+            }else if(Integer.parseInt(desiredTemp) < lowerInt){
+                desiredTemp = Integer.toString(lowerInt);
+                seekbar.setProgress((float) lowerInt / (maxTemp - minTemp) * seekbar.getMax());
+                updateBack(lowerInt, true);
+                remainderaLyout.setVisibility(View.VISIBLE);
+            }
+
             Log.d("deviceID: ", deviceID);
             Log.d("upper: ", String.valueOf(upperInt));
             Log.d("lower: ", String.valueOf(lowerInt));

@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         VM_public_ip = getString(R.string.ipAddress);
 
+
         TextView usernameTV =(TextView) findViewById(R.id.email);
         TextView passwordTV =(TextView) findViewById(R.id.password);
 
@@ -59,16 +60,16 @@ public class MainActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(password)) {
                     Toast.makeText(MainActivity.this, "Please enter email or password", Toast.LENGTH_SHORT).show();
                 }else{
-                    login(getSha256Hash(userName.trim()), getSha256Hash(password.trim()));
+//                    login(getSha256Hash(userName.trim()), getSha256Hash(password.trim()));
 
-//                    String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-//                    Pattern pattern = Pattern.compile(emailRegex);
-//                    Matcher matcher = pattern.matcher(userName.trim());
-//                    if(matcher.matches()){
-//                        login(getSha256Hash(userName.trim()), getSha256Hash(password.trim()));
-//                    }else{
-//                        Toast.makeText(MainActivity.this, "Please enter you email", Toast.LENGTH_SHORT).show();
-//                    }
+                    String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+                    Pattern pattern = Pattern.compile(emailRegex);
+                    Matcher matcher = pattern.matcher(userName.trim());
+                    if(matcher.matches()){
+                        login(getSha256Hash(userName.trim()), getSha256Hash(password.trim()));
+                    }else{
+                        Toast.makeText(MainActivity.this, "Please enter you email", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
