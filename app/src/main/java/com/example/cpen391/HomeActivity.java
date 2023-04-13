@@ -68,6 +68,9 @@ public class HomeActivity extends AppCompatActivity {
     private int delay = 5000;
 
     private static ArrayList<String> spanItems;
+
+    //Tankery. (n.d.). GitHub - CircularSeekBar. https://github.com/tankery/CircularSeekBar Use the Circular seekbar API to create seek bar for adjusting temperature
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -351,7 +354,7 @@ public class HomeActivity extends AppCompatActivity {
                                     submit.setEnabled(false);
                                     reset.setEnabled(false);
                                     remainderContent.setText(R.string.reminder_hardware);
-                                    remainderContent.setVisibility(View.VISIBLE);
+                                    remainderaLyout.setVisibility(View.VISIBLE);
                                 }else{
                                     //software Mode
                                     seekbar.setEnabled(true);
@@ -359,7 +362,7 @@ public class HomeActivity extends AppCompatActivity {
                                     submit.setEnabled(true);
                                     reset.setEnabled(true);
                                     remainderContent.setText(R.string.reminder_click);
-                                    remainderContent.setVisibility(View.INVISIBLE);
+                                    remainderaLyout.setVisibility(View.INVISIBLE);
 
                                 }
                                 if(mode != 3 || status.equalsIgnoreCase("1")){

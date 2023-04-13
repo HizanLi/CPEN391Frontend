@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
+//Philipp Jahoda. (n.d.). GitHub - MPAndroidChart. GitHub. https://github.com/PhilJay/MPAndroidChart Use the Bar chart generator API to plot bar chart
 public class HistoryActivity extends AppCompatActivity{
     private final int Temp = 1, Hum = 2;
     private final String TAG = "HistoryActivity";

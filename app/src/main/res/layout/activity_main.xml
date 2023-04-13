@@ -60,6 +60,7 @@
 
     <TextView
         android:id="@+id/forgotpass"
+        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/loginbtn"
@@ -77,6 +78,7 @@
         android:id="@+id/others"
         android:layout_above="@id/socialicons"
         android:text="or sign in with"
+        android:visibility="invisible"
         android:layout_centerHorizontal="true"/>
 
 
@@ -85,6 +87,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/socialicons"
         android:layout_alignParentBottom="true"
+        android:visibility="invisible"
         android:gravity="center">
 
 

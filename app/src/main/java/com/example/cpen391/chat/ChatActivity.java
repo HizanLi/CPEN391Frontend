@@ -33,6 +33,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Li, L. Na, P.. (n.d.). Github - help_front. GitHub. https://github.com/HizanLi/help_front Adapted the implementation of chatbot to our projec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
