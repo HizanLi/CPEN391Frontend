@@ -84,10 +84,12 @@ public class SettingsActivity extends AppCompatActivity {
                             Intent intent = result.getData();
                             assert intent != null;
                             String id = intent.getStringExtra("MESSAGE");
-                            deviceID.setSummary("Your device ID is: "+ id);
-                            deviceID.setText(id);
-                            Log.d(TAG, "id: "+ id);
-                            writeToJson(getContext(), id);
+                            if(!id.equalsIgnoreCase("Failed")){
+                                deviceID.setSummary("Your device ID is: "+ id);
+                                deviceID.setText(id);
+                                Log.d(TAG, "id: "+ id);
+                                writeToJson(getContext(), id);
+                            }
                         }
                     });
 
@@ -194,6 +196,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void writeToJson(Context applicationContext, String DeviceID){
+            Log.d(TAG, DeviceID);
+            if(DeviceID.equalsIgnoreCase("Failed")){
+                return;
+            }
+
             File file = new File(String.valueOf(applicationContext.getFilesDir()), "allDevice.json");
             if(file.exists() && !file.isDirectory()) {
                 try{
